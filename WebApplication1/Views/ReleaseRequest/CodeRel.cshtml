@@ -1,0 +1,219 @@
+﻿@* 
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Release Request</title>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; }
+        * { box-sizing: border-box; }
+        fieldset { flex-flow: row wrap; align-items: center; border: 1px solid #ddd; }
+        label { display: block; font-size: 15px; }
+        label[for='releaseSI'], label[for='DBScripts'] { display: block; font-size: 13px; color: #726b6b; background-color: #f9f9f9; width: fit-content; }
+        input, textarea, select { vertical-align: middle; padding: 5px; background-color: #fff; border: 1px solid #ddd; display: block; }
+        button { padding: 10px 20px; background-color: dodgerblue; border: 1px solid #ddd; color: white; cursor: pointer; }
+        button[disabled] { background-color: #cccccc; border: 1px solid #999999; color: #666666; cursor: not-allowed; }
+        button:hover { background-color: royalblue; }
+        h2 { font-weight: 400; }
+        legend { font-size: 12px; }
+        .fieldset { flex-direction: column; align-items: stretch; }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function toggle() {
+            var ele = document.getElementById("releaseSIMin");
+            var ele1 = document.getElementById("releaseSIMax");
+            if (ele.style.display == "block") {
+                ele.style.display = "none";
+                ele1.style.display = "block";
+            } else {
+                ele.style.display = "block";
+                ele1.style.display = "none";
+            }
+        }
+
+        function enableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML == "" &&
+                document.getElementById("workItemsError").innerHTML == "" &&
+                document.getElementById("txtEmail").value != "" &&
+                document.getElementById("workItems").value != "") {
+                document.getElementById("SubmitRequest").removeAttribute("disabled");
+            }
+        }
+
+        function disableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML != "" ||
+                document.getElementById("workItemsError").innerHTML != "" ||
+                document.getElementById("txtEmail").value == "" ||
+                document.getElementById("workItems").value == "") {
+                document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+            }
+        }
+
+        function ValidateEmail() {
+            var email = document.getElementById("txtEmail").value;
+            var lblError = document.getElementById("lblEmailError");
+            lblError.innerHTML = "";
+            var expr = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!expr.test(email.toLowerCase()) && email != "") {
+                lblError.innerHTML = "Invalid email address.";
+                disableSubmit();
+            } else {
+                enableSubmit();
+            }
+        }
+
+        function EventReset() {
+            document.getElementById("workItemsHidden").value = "";
+            document.getElementById("lblEmailError").innerHTML = "";
+            document.getElementById("workItemsError").innerHTML = "";
+            document.getElementById("releaseSIMin").innerHTML = "";
+            document.getElementById("dbScripts").innerHTML = "";
+            document.getElementById("dbScriptsDiv").style.display = 'none';
+            document.getElementById("releaseSIDiv").style.display = 'none';
+            document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+        }
+
+        function ValidateWorkItems() {
+            var workItemsInput = document.getElementById("workItems").value;
+            if (workItemsInput == "") {
+                document.getElementById("workItemsHidden").value = "";
+                document.getElementById("releaseSIMin").innerHTML = "";
+                document.getElementById("dbScripts").innerHTML = "";
+                document.getElementById("workItemsError").innerHTML = "";
+                document.getElementById("dbScriptsDiv").style.display = 'none';
+                document.getElementById("releaseSIDiv").style.display = 'none';
+                disableSubmit();
+            }
+            if (workItemsInput != "" && workItemsInput != document.getElementById("workItemsHidden").value) {
+                var wiError = document.getElementById("workItemsError");
+                wiError.innerHTML = "LOADING...";
+                document.getElementById("workItemsHidden").value = workItemsInput;
+                PageMethods.ValidateWorkItems(workItemsInput, OnSuccess, OnFailure);
+                document.activeElement.blur();
+            }
+        }
+
+        function OnSuccess(result) {
+            var resultArray = result;
+            var wiError = document.getElementById("workItemsError");
+            var dbScrpt = document.getElementById("dbScripts");
+            var SI = document.getElementById("releaseSIMin");
+            SI.innerHTML = "";
+            dbScrpt.innerHTML = "";
+            wiError.innerHTML = "";
+
+            for (var i = 0; i < resultArray.length; i++) {
+                var temp = resultArray[i].split("|||");
+                if (temp[0] == "WI-INVALID" || temp[0] == "DBSRPT-INVALID") {
+                    wiError.innerHTML = temp[1];
+                } else {
+                    if (temp[0] == "DBSRPT-VALID") {
+                        dbScrpt.innerHTML = temp[1];
+                        document.getElementById("dbScriptsDiv").style.display = 'inline';
+                    } else if (temp[0] == "WI-SI") {
+                        if (temp[1].length > 200) {
+                            SI.innerHTML = temp[1].substring(0, 200) + "<a href=\"javascript:toggle()\">(More info)</a>";
+                            document.getElementById("releaseSIMax").innerHTML = temp[1] + "<a href=\"javascript:toggle()\">(Hide info)</a>";
+                            document.getElementById("releaseSIMax").style.display = "none";
+                            document.getElementById("releaseSIMin").style.display = "block";
+                        } else {
+                            SI.innerHTML = temp[1];
+                            document.getElementById("releaseSIMax").style.display = "none";
+                        }
+
+                        document.getElementById("releaseSIDiv").style.display = 'inline';
+                    }
+                    enableSubmit();
+                }
+            }
+        }
+
+        function OnFailure(error) {
+            var wiError = document.getElementById("workItemsError");
+            wiError.innerHTML = error;
+        }
+
+        function copypastetrim(evt) {
+            document.getElementById("workItems").value = document.getElementById("workItems").value.replace(/[^\d,-]/g, '').replace(/\s/g, '').replace(/\,,/g, ',').replace(/,\s*$/, '');
+        }
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode == 44) {
+                return true;
+            }
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div id="finalSuccess" name="finalSuccess" style="@(Model.FinalSubmission == "NOERROR" ? "" : "display:none")">
+        <label for="finalSuccess" style="text-align: center;"><b>@Model.BuildLbl </b> Release request has been successfully submitted.</label><br />
+        <div id="cloneTickets" name="cloneTickets" style="@(string.IsNullOrEmpty(Model.CloneTickets) ? "display:none" : "")">
+            <label for="cloneTickets" style="text-align: center;">Clone Work-item(s): @Model.CloneTickets</label><br />
+        </div>
+        <button style="margin:auto; display:block;" onclick="window.location.href='https://qltlbbrscm02.corp.brassring.com/buildrelease/SCMActivity.asp'">Ok</button>
+    </div>
+    <form id="form1" method="post" asp-action="Submit" onreset="EventReset()">
+        <input type="hidden" id="buildLblHidden" name="buildLblHidden" value="@Model.BuildLbl" />
+        <input type="hidden" id="branchHidden" name="branchHidden" value="@Model.Branch" />
+        <input type="hidden" id="workItemsHidden" name="workItemsHidden" value="" />
+        <div id="buildReleaseFieldset" name="buildReleaseFieldset" style="@(Model.FinalSubmission == "NOERROR" ? "display:none" : "")">
+            <h2>@Model.Title</h2>
+            <label for="submissionError" style="color: red;" @(string.IsNullOrEmpty(Model.FinalSubmission) ? "style=display:none" : "")>@Model.FinalSubmission</label>
+            <fieldset>
+                <legend>Required Fields</legend>
+                @if (Model.NonCodeRelease == "NO")
+                {
+                    <div>
+                        <label for="Description">Branch: <b>@Model.Branch</b> </label>
+                        <label for="Description">Label: <b>@Model.BuildLbl</b> </label><br />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <label for="targetEnv">*Product:</label>
+                        <select name="appInfo" id="appInfo">
+                            <!-- Options -->
+                        </select><br />
+                    </div>
+                }
+
+                <div>
+                    <label for="Name">*Work Item(s):</label>
+                    <textarea id="workItems" name="workItems" onkeyup="copypastetrim(event);" onkeypress="return isNumber(event);" onmouseout="ValidateWorkItems();" placeholder="Please enter the Work Items(s) with comma(,) separated." style="width: 700px; height: 50px;"></textarea>
+                    <label id="workItemsError" style="color: red;"></label><br />
+                </div>
+                <div id="dbScriptsDiv" style="display:none;">
+                    <label for="Name">DBScripts:</label>
+                    <label for="DBScripts" name="dbScripts" id="dbScripts"></label><br />
+                </div>
+                <div id="releaseSIDiv" style="display:none;">
+                    <label for="Name">Deployment Instructions:</label>
+                    <label for="releaseSI" id="releaseSIMin"></label>
+                    <label for="releaseSI" id="releaseSIMax"></label><br />
+                </div>
+                <div>
+                    <label for="Name">*Contact email:</label>
+                    <input type="text" id="txtEmail" name="txtEmail" onkeyup="ValidateEmail();" placeholder="abc@infinite.com" size="50" />
+                    <label id="lblEmailError" style="color: red;"></label><br />
+                </div>
+                <div>
+                    <label for="targetEnv">*Target to Release:</label>
+                    
+                <div>
+                    <button id="SubmitRequest" type="submit" value="Submit" name="submitRequest" action="" disabled="disabled">Submit</button>
+                    <button id="resetRequest" type="reset" value="Reset" name="resetRequest">Reset</button>
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</body>
+</html>
+ *@

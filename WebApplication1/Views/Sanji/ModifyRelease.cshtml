@@ -1,0 +1,533 @@
+﻿@* @model WebApplication1.BuildInfo
+
+@{
+    Layout = "~/views/shared/_layout1.cshtml";
+    ViewBag.Title = "Modify Release";
+}
+<style>
+    <style >
+    .container {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+</style>
+
+<h2 class="text-center mb-4">Modify Release</h2>
+
+@if (ViewData["BuildInfo"] != null)
+{
+    var buildInfo = (WebApplication1.BuildInfo)ViewData["BuildInfo"];
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="p-3 bg-light rounded">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Build Old Style</th>
+                            <td>@buildInfo.BuildOldStyle</td>
+                        </tr>
+                        <tr>
+                            <th>Branch Floating</th>
+                            <td>@buildInfo.BranchFloating</td>
+                        </tr>
+                        <tr>
+                            <th>Build New Style</th>
+                            <td>@buildInfo.BuildNewStyle</td>
+                        </tr>
+                        <tr>
+                            <th>Label</th>
+                            <td>@buildInfo.Label</td>
+                        </tr>
+                        <tr>
+                            <th>Project</th>
+                            <td>@buildInfo.Project</td>
+                        </tr>
+                        <tr>
+                            <th>Config Changes</th>
+                            <td><pre>@buildInfo.ConfigChanges</pre></td>
+                        </tr>
+                        <tr>
+                            <th>Non-Code</th>
+                            <td>@buildInfo.NonCode</td>
+                        </tr>
+                        <tr>
+                            <th>DB Scripts</th>
+                            <td><pre>@buildInfo.DBScripts</pre></td>
+                        </tr>
+                        <tr>
+                            <th>Special Instructions</th>
+                            <td><pre>@buildInfo.SpecialInstructions</pre></td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                <!-- Button to inactivate the build -->
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-danger" id="inactivate-build-btn">Inactivate Build</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#inactivate-build-btn").click(function () {
+                var iid = '@buildInfo.BuildOldStyle';
+                $.ajax({
+                    url: '@Url.Action("InactivateBuild", "Sanji")',
+                    type: 'POST',
+                    data: { IID: iid },
+                    success: function (response) {
+                        alert("Build inactivated successfully!");
+                        // Optionally, redirect or update the UI here
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred while inactivating the build: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <p class="text-center text-danger">No build information available.</p>
+} *@
+
+
+@model WebApplication1.BuildInfo
+
+@{
+    Layout = "~/views/shared/_layout1.cshtml";
+    ViewBag.Title = "Modify Release";
+}
+<style>
+    .container {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+</style>
+
+<h2 class="text-center mb-4"></h2>
+
+@if (ViewData["BuildInfo"] != null)
+{
+    var buildInfo = (WebApplication1.BuildInfo)ViewData["BuildInfo"];
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="p-3 bg-light rounded">
+                    <h3 class="text-center mb-4">Modify Release</h3> <!-- Added header for build information -->
+                    <table class="table table-striped table-bordered">
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.BuildOldStyle))
+                        {
+                            <tr>
+                                <th>Build Old Style</th>
+                                <td>@buildInfo.BuildOldStyle</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.BranchFloating))
+                        {
+                            <tr>
+                                <th>Branch Floating</th>
+                                <td>@buildInfo.BranchFloating</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.BuildNewStyle))
+                        {
+                            <tr>
+                                <th>Build New Style</th>
+                                <td>@buildInfo.BuildNewStyle</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.Label))
+                        {
+                            <tr>
+                                <th>Label</th>
+                                <td>@buildInfo.Label</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.Project))
+                        {
+                            <tr>
+                                <th>Project</th>
+                                <td>@buildInfo.Project</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.ConfigChanges))
+                        {
+                            <tr>
+                                <th>Config Changes</th>
+                                <td><pre>@buildInfo.ConfigChanges</pre></td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.NonCode))
+                        {
+                            <tr>
+                                <th>Non-Code</th>
+                                <td>@buildInfo.NonCode</td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.DBScripts))
+                        {
+                            <tr>
+                                <th>DB Scripts</th>
+                                <td><pre>@buildInfo.DBScripts</pre></td>
+                            </tr>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(buildInfo.SpecialInstructions))
+                        {
+                            <tr>
+                                <th>Special Instructions</th>
+                                <td><pre>@buildInfo.SpecialInstructions</pre></td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+                <!-- Button to inactivate the build -->
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-danger" id="inactivate-build-btn">Inactivate Build</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#inactivate-build-btn").click(function () {
+                var iid = '@buildInfo.BuildOldStyle';
+                $.ajax({
+                    url: '@Url.Action("InactivateBuild", "Sanji")',
+                    type: 'POST',
+                    data: { IID: iid },
+                    success: function (response) {
+                        alert("Build inactivated successfully!");
+                        // Optionally, redirect or update the UI here
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred while inactivating the build: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <p class="text-center text-danger">No build information available.</p>
+}
+
+
+
+
+@* 
+@model Tuple<WebApplication1.BuildInfo, WebApplication1.Models.EmailViewModel>
+
+@{
+    ViewBag.Title = "Modify Release";
+}
+
+<style>
+    .form-section {
+        margin-top: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .inactivate-btn {
+        margin-top: 30px;
+    }
+
+    .no-build-info {
+        margin-top: 20px;
+        color: red;
+    }
+</style>
+
+<h2 class="text-center mb-4">Modify Release</h2>
+
+@if (Model.Item1 != null)
+{
+    var buildInfo = Model.Item1;
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="p-3 bg-light rounded">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Build Old Style</th>
+                            <td>@buildInfo.BuildOldStyle</td>
+                        </tr>
+                        <tr>
+                            <th>Branch Floating</th>
+                            <td>@buildInfo.BranchFloating</td>
+                        </tr>
+                        <tr>
+                            <th>Build New Style</th>
+                            <td>@buildInfo.BuildNewStyle</td>
+                        </tr>
+                        <tr>
+                            <th>Label</th>
+                            <td>@buildInfo.Label</td>
+                        </tr>
+                        <tr>
+                            <th>Project</th>
+                            <td>@buildInfo.Project</td>
+                        </tr>
+                        <tr>
+                            <th>Config Changes</th>
+                            <td><pre>@buildInfo.ConfigChanges</pre></td>
+                        </tr>
+                        <tr>
+                            <th>Non-Code</th>
+                            <td>@buildInfo.NonCode</td>
+                        </tr>
+                        <tr>
+                            <th>DB Scripts</th>
+                            <td><pre>@buildInfo.DBScripts</pre></td>
+                        </tr>
+                        <tr>
+                            <th>Special Instructions</th>
+                            <td><pre>@buildInfo.SpecialInstructions</pre></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Email form section -->
+                <div class="card mt-4 p-4 bg-light">
+                    <h4>Send Release Email</h4>
+                    <form asp-action="SendEmail" method="post">
+                        <input type="hidden" name="IID" value="@Model.Item2.IID" />
+                        <input type="hidden" name="URLFROM" value="@Model.Item2.URLFROM" />
+
+                        <div class="form-group">
+                            <label for="Build">Build Name</label>
+                            <input type="text" name="Build" value="@Model.Item2.Build" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="EmailList">Email Recipients</label>
+                            <textarea name="EmailList" class="form-control" rows="4">@Model.Item2.EmailList</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NonCode">Is this a Non-Code Release?</label>
+                            <input type="checkbox" name="NonCode" value="true" @(Model.Item2.NonCode ? "checked" : "") />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HadScripts">Did the release have scripts?</label>
+                            <input type="checkbox" name="HadScripts" value="true" @(Model.Item2.HadScripts ? "checked" : "") />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HasScripts">Does the release currently have scripts?</label>
+                            <input type="checkbox" name="HasScripts" value="true" @(Model.Item2.HasScripts ? "checked" : "") />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Email</button>
+                    </form>
+                </div>
+
+                <!-- Button to inactivate the build -->
+                <div class="text-center inactivate-btn">
+                    <button type="button" class="btn btn-danger" id="inactivate-build-btn">Inactivate Build</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#inactivate-build-btn").click(function () {
+                var iid = @Model.Item2.IID;
+                $.ajax({
+                    url: '@Url.Action("InactivateBuild", "Sanji")',
+                    type: 'POST',
+                    data: { IID: iid },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Build inactivated successfully!");
+                        } else {
+                            alert("Failed to inactivate build: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred while inactivating the build: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <p class="text-center no-build-info">No build information available.</p>
+}
+ *@

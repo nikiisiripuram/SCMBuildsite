@@ -1,0 +1,544 @@
+﻿@*  @model System.Data.DataSet
+
+@{
+    ViewData["Title"] = "Script Details";
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: top;
+        }
+
+        .card-custom {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: #fff;
+            margin-top: 20px;
+            width: 60%;
+            max-width: 850px;
+            margin: 20px auto;
+        }
+
+        .form-control-custom {
+            height: 38px;
+            border-radius: 0.375rem 0 0 0.375rem;
+            border: 1px solid #ddd;
+            padding: 8px;
+            width: 260px;
+            margin-right: 10px;
+        }
+
+        .btn-custom-search {
+            border-radius: 0 0.375rem 0.375rem 0;
+            background-color: #007bff;
+            color: white;
+            height: 38px;
+            border: 1px solid #007bff;
+            padding: 8px 20px;
+            cursor: pointer;
+        }
+
+            .btn-custom-search:hover {
+                background-color: #0056b3;
+            }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .btn-back {
+            float: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+
+        h2 {
+            color: #151616;
+            padding: 10px 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-top: 0;
+            margin-left: 0; /* Moves the h2 to the left */
+            text-align: center; /* Aligns text to the left */
+        }
+
+        p {
+            margin-top: -15px; /* Adds a negative top margin */
+            margin-left: 30px; /* Moves the description to the left */
+            text-align: center; /* Aligns text to the center (change comment to match) */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Get Script Details</h2>
+        <p> <b>(To fetch the details of Approved Db script from the Github.)</b></p>
+
+        <div class="text-center">
+            <div class="input-group" style="max-width: 500px; margin: 0 auto;">
+                <label for="ScriptName" style="margin-right: 10px; padding: 10px"><b>Script Name</b></label>
+                <input type="text" id="ScriptName" name="ScriptName" class="form-control-custom" placeholder="Enter Script Name" aria-label="Search" aria-describedby="search-addon" />
+                <button type="button" onclick="getScriptData()" class="btn-custom-search">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scriptDetails" class="card-custom">
+        @await Html.PartialAsync("_ScriptDetailPartial", Model)
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function getScriptData() {
+            var scriptName = $('#ScriptName').val();
+            if (!scriptName) {
+                alert('Please enter a script name.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Details", "Script")',
+                type: 'GET',
+                data: { scriptName: scriptName },
+                success: function (data) {
+                    $('#scriptDetails').html(data);
+                },
+                error: function () {
+                    alert('Failed to retrieve data.');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
+ *@
+
+@*  @model System.Data.DataSet
+
+@{
+    ViewData["Title"] = "Script Details";
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <!-- Include Font Awesome for the search icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: top;
+        }
+
+        .card-custom {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: #fff;
+            margin-top: 20px;
+            width: 60%;
+            max-width: 850px;
+            margin: 20px auto;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .btn-back {
+            float: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+
+        h2 {
+            color: #151616;
+            padding: 10px 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-top: 0;
+            margin-left: 0;
+            text-align: center;
+        }
+
+        p {
+            margin-top: -15px;
+            margin-left: 30px;
+            text-align: center;
+        }
+
+        /* Search Box Styling */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 100%;
+            position: relative;
+            max-width: 600px;
+        }
+
+            .search-box input[type="text"] {
+                width: 100%;
+                padding: 10px 50px 10px 15px;
+                border: 2px solid #ddd;
+                border-radius: 25px;
+                outline: none;
+                font-size: 16px;
+                transition: border 0.3s ease;
+            }
+
+                .search-box input[type="text"]:focus {
+                    border-color: #007bff;
+                }
+
+            .search-box button {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: #007bff;
+                border: none;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .search-box button:hover {
+                    background-color: #0056b3;
+                }
+
+                .search-box button i {
+                    margin: 0;
+                }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Get Script Details</h2>
+        <p><b>(To fetch the details of Approved Db script from Github.)</b></p>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="ScriptName" name="ScriptName" class="form-control-custom" placeholder="Enter Script Name" aria-label="Search" aria-describedby="search-addon" />
+                <!-- Replace button text with a search icon -->
+                <button type="button" onclick="getScriptData()">
+                 Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scriptDetails" class="card-custom">
+        @await Html.PartialAsync("_ScriptDetailPartial", Model)
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function getScriptData() {
+            var scriptName = $('#ScriptName').val();
+            if (!scriptName) {
+                alert('Please enter a script name.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Details", "Script")',
+                type: 'GET',
+                data: { scriptName: scriptName },
+                success: function (data) {
+                    $('#scriptDetails').html(data);
+                },
+                error: function () {
+                    alert('Failed to retrieve data.');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
+ *@
+
+ @model System.Data.DataSet
+
+@{
+    ViewData["Title"] = "Script Details";
+}
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Details</title>
+
+    <!-- Include Font Awesome for the search icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: top;
+        }
+
+        .card-custom {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: #fff;
+            margin-top: 20px;
+            width: 60%;
+            max-width: 850px;
+            margin: 20px auto;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .btn-back {
+            float: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+
+        h2 {
+            color: #151616;
+            padding: 10px 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-top: 0;
+            margin-left: 0;
+            text-align: center;
+        }
+
+        p {
+            margin-top: -15px;
+            margin-left: 30px;
+            text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 80px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #151616;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-top: -15px;
+        }
+
+        /* Search Box Styling */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-box input[type="text"] {
+            width: 100%;
+            padding: 10px 40px 10px 15px; /* Adjust padding for icon */
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+
+        .search-box input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 0; /* Moved to the very edge */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 20px;
+            padding-right: 15px; /* Extra padding to ensure it doesn't stick to the edge */
+            transition: color 0.3s ease;
+        }
+
+        .search-box button:hover {
+            color: #0056b3; /* Hover effect on icon */
+        }
+
+      
+
+            .search-box button {
+                font-size: 18px;
+            }
+        }
+
+        
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Get Script Details</h2>
+        <p><b>(To fetch the details of Approved Db script from Github.)</b></p>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="ScriptName" name="ScriptName" class="form-control-custom" placeholder="Enter Script Name" aria-label="Search" aria-describedby="search-addon" />
+                <button type="button" onclick="getScriptData()">
+                    <!-- Search icon from Font Awesome -->
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="scriptDetails" class="card-custom">
+        @await Html.PartialAsync("_ScriptDetailPartial", Model)
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function getScriptData() {
+            var scriptName = $('#ScriptName').val();
+            if (!scriptName) {
+                alert('Please enter a script name.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Details", "Script")',
+                type: 'GET',
+                data: { scriptName: scriptName },
+                success: function (data) {
+                    $('#scriptDetails').html(data);
+                },
+                error: function () {
+                    alert('Failed to retrieve data.');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    Layout = "~/ views / shared / _layout1.cshtml";  // No layout needed since this will just execute the script
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+</head>
+<body>
+    Redirecting to EU Prod Smoke Test...
+
+    <script type="text/javascript">
+        // Open the URL in a new tab
+        var newTab = window.open('@ViewBag.RedirectUrl', '_blank');
+
+        // Focus the new tab (if popups are allowed)
+        if (newTab) {
+            newTab.focus();
+        } else {
+            alert('Please allow popups for this website');
+        }
+
+        // Redirect the current page to the home page
+        window.location.href = '@Url.Action("Index", "Home")';
+    </script>
+</body>
+</html>
+

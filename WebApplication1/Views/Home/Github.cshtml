@@ -1,0 +1,506 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Request GitHub Build</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+</head>
+<link rel="stylesheet" href="~/css/site.css" />
+<style>
+   /*  body{
+        background-image:none;
+        background: #dcf7f6;
+    } */
+    /* Style for round corners */
+    .container, .card {
+        border-radius: 20px;
+    }
+
+    .close-icon {
+        position: absolute;
+        top: -30px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .close {
+        float: right;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+    }
+    
+</style>
+<body>
+
+@* <div class="container" style="margin-top: 80px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="icon fab fa-github-icon me-3"></i> <span>GitHub Build Request</span>
+                    </h4>
+                    <div class="form-container" style="position: relative;">
+                        <div class="close-icon" onclick="closeForm()">✖</div>
+                    </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" oninput="Scm()" value="@ViewBag.Email">
+                            <span id="emailError" style="color: red; display: none;">Please enter a valid email address</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstList">Repository</label>
+                            <select class="form-control" id="firstList" name="firstList" onchange="getSubcomponent();Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="secondList">Subcomponent</label>
+                            <select class="form-control" id="secondList" name="secondList" onchange="Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="thirdList">Branch</label>
+                            <select class="form-control" id="thirdList" name="thirdList" onchange="Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fourthList">Build Configuration</label>
+                            <select class="form-control" id="fourthList" name="fourthList" onchange="Scm()"></select>
+                        </div>
+
+                        <br>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-light" id="Submitbtn" onClick="showConfirmation()" disabled>Submit</button>
+                            <button type="button" class="btn btn-default" onclick="resetForm()">Reset</button>
+                        </div>
+                    </div> *@
+
+    <div class="container" style="margin-top: 80px;">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card" style="width: 100%; height: 100%;">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <i class="icon fab fa-github-icon me-3"></i> <span>GitHub Build Request</span>
+                        </h4>
+                        <p style="font-size: 1.5rem; margin-top: 10px; color: #6c757d;">
+                            (To Raise GitHub Build Request from GitHub Repositories)
+                        </p>
+                        <div class="form-container" style="position: relative;">
+                            <div class="close-icon" onclick="closeForm()">✖</div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" oninput="Scm()" value="@ViewBag.Email">
+                            <span id="emailError" style="color: red; display: none;">Please enter a valid email address</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstList">Repository</label>
+                            <select class="form-control" id="firstList" name="firstList" onchange="getSubcomponent();Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="secondList">Subcomponent</label>
+                            <select class="form-control" id="secondList" name="secondList" onchange="Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="thirdList">Branch</label>
+                            <select class="form-control" id="thirdList" name="thirdList" onchange="Scm()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fourthList">Build Configuration</label>
+                            <select class="form-control" id="fourthList" name="fourthList" onchange="Scm()"></select>
+                        </div>
+
+                        <br>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-light" id="Submitbtn" onClick="showConfirmation()" disabled>Submit</button>
+                            <button type="button" class="btn btn-default" onclick="resetForm()">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+                    <script>
+                   
+                        function closeForm() {
+                            document.querySelector(".form-group").parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "none";
+                        }
+
+                        $(document).ready(function () {
+                            var list1 = document.getElementById('firstList');
+
+            list1.options[0] = new Option('--Select--', '');
+            list1.options[1] = new Option('AssessmentBatch-Pipeline', 'AssessmentBatch-Pipeline');
+            list1.options[2] = new Option('Burning-Glass-Pipeline', 'Burning-Glass-Pipeline');
+            list1.options[3] = new Option('Companion-Products-Pipeline', 'Companion-Products-Pipeline');
+            list1.options[4] = new Option('Dashboard-Pipeline', 'Dashboard-Pipeline');
+            list1.options[5] = new Option('DIT-Pipeline', 'DIT-Pipeline');
+            list1.options[6] = new Option('DST-Pipeline', 'DST-Pipeline');
+            list1.options[7] = new Option('Enterprise-Pipeline', 'Enterprise-Pipeline');
+            list1.options[8] = new Option('Enterprise-Utilities-Pipeline', 'Enterprise-Utilities-Pipeline');
+            list1.options[9] = new Option('Integration-Pipeline', 'Integration-Pipeline');
+            list1.options[10] = new Option('Kenexa-Personalization-Pipeline', 'Kenexa-Personalization-Pipeline');
+            list1.options[11] = new Option('KRBUtilities-Pipeline', 'KRBUtilities-Pipeline');
+            list1.options[12] = new Option('Lead-Manager-Pipeline', 'Lead-Manager-Pipeline');
+            list1.options[13] = new Option('Purge-Utilities-Pipeline', 'Purge-Utilities-Pipeline');
+            list1.options[14] = new Option('Reporting-Standard-Pipeline', 'Reporting-Standard-Pipeline');
+            list1.options[15] = new Option('Scheduler-Pipeline', 'Scheduler-Pipeline');
+            list1.options[16] = new Option('SCM-Pipeline', 'SCM-Pipeline');
+            list1.options[17] = new Option('Search-Utilities-Pipeline', 'Search-Utilities-Pipeline');
+            list1.options[18] = new Option('TG-Legacy-Pipeline', 'TG-Legacy-Pipeline');
+            list1.options[18] = new Option('TG-Web-Pipeline', 'TG-Web-Pipeline');
+            list1.options[19] = new Option('TGUtilities-Pipeline', 'TGUtilities-Pipeline');
+            list1.options[20] = new Option('Workbench-Pipeline', 'Workbench-Pipeline');
+            list1.options[21] = new Option('XMAP-Pipeline', 'XMAP-Pipeline');
+            list1.options[22] = new Option('BGCS-Pipeline', 'BGCS-Pipeline');
+            list1.options[23] = new Option('TG-Chatbot-Pipeline', 'TG-Chatbot-Pipeline');
+            list1.options[24] = new Option('Two-Way-Messaging-Pipeline', 'Two-Way-Messaging-Pipeline');
+
+                            var list3 = document.getElementById('thirdList');
+
+                            list3.options[0] = new Option('--Select--', '');
+                            list3.options[1] = new Option('Dev', 'Dev');
+                            list3.options[2] = new Option('QA', 'QA');
+                            list3.options[3] = new Option('Prod', 'Prod');
+
+                            var list4 = document.getElementById('fourthList');
+
+                            list4.options[0] = new Option('Release', 'Release');
+                            list4.options[1] = new Option('AppScan', 'Debug');
+                        });
+
+                        function getSubcomponent() {
+
+                            var list1 = document.getElementById('firstList');
+                            var list2 = document.getElementById("secondList");
+                            var list1SelectedValue = list1.options[list1.selectedIndex].value;
+                            if (list1SelectedValue == 'Enterprise-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('AllNet', 'AllNet');
+                                list2.options[3] = new Option('BrassRingUtilities', 'BrassRingUtilities');
+                                list2.options[4] = new Option('Agency', 'Agency');
+                                list2.options[5] = new Option('BRDateTime', 'BRDateTime');
+                                list2.options[6] = new Option('2xBFileConversion', '2xBFileConversion');
+                                list2.options[7] = new Option('CandidateMarketing', 'CandidateMarketing');
+                                list2.options[8] = new Option('FieldAssociations', 'FieldAssociations');
+                                list2.options[9] = new Option('GridEnhancements', 'GridEnhancements');
+                                list2.options[10] = new Option('MobileApproval', 'MobileApproval');
+                                list2.options[11] = new Option('BulkPrint', 'BulkPrint');
+                                list2.options[12] = new Option('ReqAttachments', 'ReqAttachments');
+                                list2.options[13] = new Option('ReqSubsidiaryForms', 'ReqSubsidiaryForms');
+                                list2.options[14] = new Option('UpdateReqs', 'UpdateReqs');
+                                list2.options[15] = new Option('ProximityJobSearch', 'ProximityJobSearch');
+                                list2.options[16] = new Option('WelcomePages', 'WelcomePages');
+                                list2.options[17] = new Option('ServiceBroker', 'ServiceBroker');
+                                list2.options[18] = new Option('Utilities', 'Utilities');
+                                list2.options[19] = new Option('SecurityQuestions', 'SecurityQuestions');
+                                list2.options[20] = new Option('FileService', 'FileService');
+                                list2.options[21] = new Option('SpellCheckService', 'SpellCheckService');
+                                list2.options[22] = new Option('NetWebServices', 'NetWebServices');
+                                list2.options[23] = new Option('Requisition', 'Requisition');
+                                list2.options[24] = new Option('KRBPersonalization', 'KRBPersonalization');
+                                list2.options[25] = new Option('KRBObjectAPI', 'KRBObjectAPI');
+                                list2.options[26] = new Option('CommunicationPlatform', 'CommunicationPlatform');
+                                list2.options[27] = new Option('KRBNEWUI', 'KRBNEWUI');
+                                list2.options[28] = new Option('Posting', 'Posting');
+                                list2.options[29] = new Option('ReqAutoCloseService', 'ReqAutoCloseService');
+                                list2.options[30] = new Option('EnhancedSearch', 'EnhancedSearch');
+                                list2.options[31] = new Option('KRBIntegrations', 'KRBIntegrations');
+                                list2.options[32] = new Option('Dashboard', 'Dashboard');
+                                list2.options[33] = new Option('ClassicUI', 'ClassicUI');
+                            } else if (list1SelectedValue == 'TG-Web-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('TalentGatewayMVC45', 'TalentGatewayMVC45');
+                                list2.options[3] = new Option('GatewayQuestionnaire45', 'GatewayQuestionnaire45');
+                                list2.options[4] = new Option('TalentGateway45', 'TalentGateway45');
+                                list2.options[5] = new Option('GetTGUserNames45', 'GetTGUserNames45');
+                                list2.options[6] = new Option('AgencyDotNet45', 'AgencyDotNet45');
+                                list2.options[7] = new Option('SearchWebService45', 'SearchWebService45');
+                                list2.options[8] = new Option('CandidateWebService45', 'CandidateWebService45');
+                            } else if (list1SelectedValue == 'TGUtilities-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('AgentMigrationNET', 'AgentMigrationNET');
+                                list2.options[3] = new Option('AIPCleanerNET', 'AIPCleanerNET');
+                                list2.options[4] = new Option('ArchiveCandidateXMLNET', 'ArchiveCandidateXMLNET');
+                                list2.options[5] = new Option('AuthenticationHarness', 'AuthenticationHarness');
+                                list2.options[6] = new Option('GenPXMLsNET', 'GenPXMLsNET');
+                                list2.options[7] = new Option('JobMailerNET', 'JobMailerNET');
+                                list2.options[8] = new Option('ProfileMoverApp', 'ProfileMoverApp');
+                                list2.options[9] = new Option('SBWatch', 'SBWatch');
+                                list2.options[10] = new Option('SearchHarness', 'SearchHarness');
+                                list2.options[11] = new Option('IRHarness', 'IRHarness');
+                                list2.options[12] = new Option('BRUtilTaskMonitor', 'BRUtilTaskMonitor');
+                            } else if (list1SelectedValue == 'Enterprise-Utilities-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('SearchLog', 'SearchLog');
+                                list2.options[3] = new Option('KRBAsyncQueue', 'KRBAsyncQueue');
+                                list2.options[4] = new Option('KRBAuditProcessing', 'KRBAuditProcessing');
+                                list2.options[5] = new Option('DeleteUtility', 'DeleteUtility');
+                                list2.options[6] = new Option('RAMEngine', 'RAMEngine');
+                                list2.options[7] = new Option('KRBWebUtils', 'KRBWebUtils');
+                                list2.options[8] = new Option('CommonOvernightSearch    ', 'CommonOvernightSearch    ');
+                                list2.options[9] = new Option('AccountAndLicenseManagement', 'AccountAndLicenseManagement');
+                                list2.options[10] = new Option('AutofilerNET', 'AutofilerNET');
+                                list2.options[11] = new Option('DataExportForWatsonApps', 'DataExportForWatsonApps');
+                                list2.options[12] = new Option('KRB_TalentSuite_Integration', 'KRB_TalentSuite_Integration');
+                                list2.options[13] = new Option('ErrorLoggerAPI', 'ErrorLoggerAPI');
+                                list2.options[14] = new Option('DSTMonitors', 'DSTMonitors');
+                                list2.options[15] = new Option('DIT-Alerts', 'DIT-Alerts');
+                                list2.options[16] = new Option('Agency', 'Agency');
+                            } else if (list1SelectedValue == 'DIT-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('Phoenix', 'Phoenix');
+                                list2.options[3] = new Option('AllServices', 'AllServices');
+                                list2.options[4] = new Option('SSIS', 'SSIS');
+                                list2.options[5] = new Option('Dashboard', 'Dashboard');
+                                list2.options[6] = new Option('BackgroundJobNotification', 'BackgroundJobNotification');
+                                list2.options[7] = new Option('BackgroundJobFTPDelivery', 'BackgroundJobFTPDelivery');
+                                list2.options[8] = new Option('ScheduledJobFTPDelivery', 'ScheduledJobFTPDelivery');
+                                list2.options[9] = new Option('DeleteExpiredFiles', 'DeleteExpiredFiles');
+                                list2.options[10] = new Option('QueuedJobProcessor', 'QueuedJobProcessor');
+                                list2.options[11] = new Option('ScheduledJobNotification', 'ScheduledJobNotification');
+                            } else if (list1SelectedValue == 'KRBUtilities-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                //list2.options[2] = new Option('CommonSearchAPI', 'CommonSearchAPI');
+                                list2.options[3] = new Option('CommonSearchService', 'CommonSearchService');
+                                //list2.options[4] = new Option('KRBCache', 'KRBCache');
+                                //list2.options[5] = new Option('GeoData', 'GeoData');
+                                //} else if (list1SelectedValue=='Workbench-Pipeline'){
+                                //    list2.options.length=0;
+                                //    list2.options[0] = new Option('--Select--', '');
+                                //    list2.options[1] = new Option('All', 'All');
+                                //    list2.options[2] = new Option('WorkbenchALLNET', 'WorkbenchALLNET');
+                                //    list2.options[3] = new Option('Workbench', 'Workbench');
+                                //    list2.options[4] = new Option('WorkbenchMVC', 'WorkbenchMVC');
+                                //    list2.options[5] = new Option('WorkbenchServices', 'WorkbenchServices');
+                                //    list2.options[6] = new Option('WB.Web', 'WB.Web');
+                                //    list2.options[7] = new Option('WB.Service.WebHost', 'WB.Service.WebHost');
+                                //    list2.options[8] = new Option('API', 'API');
+                            } else if (list1SelectedValue == 'Scheduler-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[3] = new Option('BrassringScheduler', 'BrassringScheduler');
+                                list2.options[4] = new Option('BrassringSchedulerEmail', 'BrassringSchedulerEmail');
+                                list2.options[5] = new Option('BrassringSchedulerExpiredFiles', 'BrassringSchedulerExpiredFiles');
+                                list2.options[6] = new Option('BrassringSchedulerExpiredJobs', 'BrassringSchedulerExpiredJobs');
+                                list2.options[7] = new Option('BrassringSchedulerFailedJobs', 'BrassringSchedulerFailedJobs');
+                                list2.options[8] = new Option('BrassringSchedulerOrphanJobs', 'BrassringSchedulerOrphanJobs');
+                                list2.options[9] = new Option('BrassringSchedulerScheduleQueue', 'BrassringSchedulerScheduleQueue');
+                                list2.options[10] = new Option('BrassringSchedulerSubUpdateUserStatus', 'BrassringSchedulerSubUpdateUserStatus');
+                                list2.options[11] = new Option('BrassringSchedulerManager', 'BrassringSchedulerManager');
+                                list2.options[12] = new Option('BrassringSchedulerMonitor', 'BrassringSchedulerMonitor');
+                                list2.options[13] = new Option('BrassringSchedulerScheduleImpact', 'BrassringSchedulerScheduleImpact');
+                            } else if (list1SelectedValue == 'Search-Utilities-Pipeline') {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                                list2.options[2] = new Option('SolrSupportTools', 'SolrSupportTools');
+                                list2.options[3] = new Option('BurningGlassHealthCheck', 'BurningGlassHealthCheck');
+                                list2.options[4] = new Option('MsgLoginIndexer', 'MsgLoginIndexer');
+                            } else {
+                                list2.options.length = 0;
+                                list2.options[0] = new Option('--Select--', '');
+                                list2.options[1] = new Option('All', 'All');
+                            }
+                        }
+                        function alert() {
+                            var email = document.getElementById("email").value;
+                            var repository = document.getElementById("firstList").value;
+                            var subcomponent = document.getElementById("secondList").value;
+                            var branch = document.getElementById("thirdList").value;
+                            var configuration = document.getElementById("fourthList").value;
+                            if (confirm(configuration)) {
+                                window.location.reload();
+                            }
+                        }
+
+                        // janky recursive function that will call itself until the desired field is found!
+                        function callBuildQueueUrl(queueUrl) {
+                            var xmlhttp = new XMLHttpRequest();
+
+                            xmlhttp.onreadystatechange = function () {
+                                if (this.readyState == 4 && this.status == 200) {
+                                    var obj = JSON.parse(xmlhttp.responseText)
+                                    //console.log(obj.executable);
+                                    if (typeof obj.executable === "undefined") {
+                                        callBuildQueueUrl(queueUrl);
+                                    } else if (typeof obj.executable.url === "undefined" || typeof obj.executable.url === "null") {
+                                        callBuildQueueUrl(queueUrl);
+                                    } else {
+                                        var buildUrl = obj.executable.url;
+                                        if (confirm("Request Accepted. Here's your build: " + buildUrl)) {
+                                            window.location.reload();
+                                        }
+                                    }
+                                }
+                            };
+                            xmlhttp.open("GET", queueUrl, true);
+                            xmlhttp.send();
+                        }
+
+                        function callJenkins() {
+
+
+                            var email = document.getElementById("email").value;
+                            var repository = document.getElementById("firstList").value;
+                            var subcomponent = document.getElementById("secondList").value;
+                            var branch = document.getElementById("thirdList").value;
+                            var configuration = document.getElementById("fourthList").value;
+                            var method = "POST"
+
+                            //var url = `https://tms-brassring-jenkins.swg-devops.com/job/Build%20Site%20Integration%20Jobs/job/Compile%20Pipeline%202016/buildWithParameters?Component=${repository}&Branch=${branch}&Subcomponents=${subcomponent}&Email=${email}&Build%20Configuration=${configuration}`
+                            //var url = `https://qltlbbrjnkap03/job/Brassring%20Code%20Compile/job/Compile%20Pipeline/buildWithParameters?Component=${repository}&Branch=${branch}&Subcomponents=${subcomponent}&Email=${email}&Build%20Configuration=${configuration}`
+                            if (repository == "Lead-Manager-Pipeline") {
+                                var url = `https://qltlbbrjnkap03/job/LeadManager/job/${branch}/build?`
+                            } else {
+                                var url = `https://qltlbbrjnkap03/job/Brassring%20Code%20Compile/job/Compile%20Pipeline/buildWithParameters?Component=${repository}&Branch=${branch}&Subcomponents=${subcomponent}&Email=${email}&Build%20Configuration=${configuration}`
+                            }
+
+
+
+                            //var url = `https://br-labs-jenkins.br.swglab.ibm.com/job/Brassring%20Code%20Compile/job/Compile%20Pipeline/buildWithParameters?Component=${repository}&Branch=${branch}&Subcomponents=${subcomponent}&Email=${email}&Build%20Configuration=${configuration}`
+                            //var url = `https://br-labs-jenkins.vip.corp.brassring.com/job/Brassring%20Code%20Compile/job/Compile%20Pipeline/buildWithParameters?Component=${repository}&Branch=${branch}&Subcomponents=${subcomponent}&Email=${email}&Build%20Configuration=${configuration}`
+                            var user = "releng";
+                            //var token = "0828161aa59119e399715bc3a721a0ba" ;
+                            var token = "11b54efb438b749308122cf9135ffe07ed";
+                            var xhr = new XMLHttpRequest();
+                            xhr.open(method, url);
+                            xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user + ":" + token));
+
+                            xhr.onreadystatechange = function () {
+                                if (this.readyState == 4 && this.status == 201) {
+                                    console.log("call complete");
+                                    // Get the raw header string
+                                    var queueUrl = xhr.getResponseHeader('Location') + "/api/json";
+
+                                    // we now have the location of the build in the queue
+                                    // Grab the location of the build
+
+                                    var buildUrl = callBuildQueueUrl(queueUrl);
+                                }
+                            };
+
+                            xhr.send();
+
+                        }
+                        function Scm() {
+                            var email = document.getElementById("email");
+                            var repository = document.getElementById("firstList");
+                            var subcomponent = document.getElementById("secondList");
+                            var branch = document.getElementById("thirdList");
+                            var configuration = document.getElementById("fourthList");
+
+                            // Check if fields are empty
+                            var isValidEmail = validateField(email);
+                            var isValidRepository = validateField(repository);
+                            var isValidSubcomponent = validateField(subcomponent);
+                            var isValidBranch = validateField(branch);
+                            var isValidConfiguration = validateField(configuration);
+
+                            // Display error message if any field is empty
+                            if (!isValidEmail || !isValidRepository || !isValidSubcomponent || !isValidBranch || !isValidConfiguration) {
+                                $("#errorMessage").text("Please fill all fields.");
+                            } else {
+                                $("#errorMessage").text(""); // Clear error message if all fields are filled
+                            }
+
+                            // Enable submit button if all fields are filled and email is valid
+                            var isFormValid = isValidEmail && isValidRepository && isValidSubcomponent && isValidBranch && isValidConfiguration;
+                            $("#Submitbtn").prop("disabled", !isFormValid);
+
+                            $("#Submitbtn").addClass("btn-primary")
+                        }
+
+                        function validateField(field) {
+                            var value = field.value.trim();
+                            return value !== '';
+                        }
+
+                        function validateEmail(email) {
+                            var regex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                            return regex.test(email.value.trim());
+                        }
+                        function resetForm() {
+                            document.getElementById('email').value = '';
+                            document.getElementById('firstList').selectedIndex = 0;
+                            document.getElementById('secondList').selectedIndex = 0;
+                            document.getElementById('thirdList').selectedIndex = 0;
+                            document.getElementById('fourthList').selectedIndex = 0;
+                            document.getElementById('emailError').style.display = 'none';
+                            document.getElementById('Submitbtn').disabled = true;
+                        }
+                        function showConfirmation() {
+                            // Show the alert popup with Cancel and Continue buttons
+                            if (confirm("Are you sure you want to submit?")) {
+                                // If Continue is clicked, call the submit function
+                                callJenkins(); // Call your submit function here
+                            } else {
+                                // If Cancel is clicked, do nothing or handle as needed
+                                cancelSubmit(); // Call the cancel function
+                            }
+                        }
+
+                        function cancelSubmit() {
+                            // This function handles the cancel action
+                            alert("Submission canceled."); // Display a message or perform other actions
+                            // You can add more code here if needed
+                        }
+
+
+
+                    </script>
+</body>
+</html>

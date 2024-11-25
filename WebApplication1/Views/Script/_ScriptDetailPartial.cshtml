@@ -1,0 +1,476 @@
+﻿@* 
+@model System.Data.DataSet
+
+@using System.Data
+
+@{
+    var scriptName = Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0 ? Model.Tables[0].Rows[0]["ScriptName"].ToString() : "";
+}
+
+@if (Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+{
+    var scriptData = Model.Tables[0].Rows[0];
+    <form id="scriptDetailsForm" method="post" action="">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="text-center">
+                    Script Data
+                </h5>
+
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td><b>Script Name:</b></td>
+                            <td>
+                                @{
+                                    var scriptUrl = "#"; // Placeholder, will be replaced by jQuery
+                                }
+                                <a href="#" id="scriptLink">
+                                    <font color="#ff0000">@scriptData["ScriptName"]</font>
+                                </a> (Click file name to view)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Date Requested:</b></td>
+                            <td>@scriptData["DateRequested"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Requestor:</b></td>
+                            <td>@scriptData["Requestor"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Database Schema:</b></td>
+                            <td>@scriptData["DatabaseSchema"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Application:</b></td>
+                            <td>@scriptData["AppVersion"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Entities Affected:</b></td>
+                            <td>@scriptData["EntitiesAffected"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Comments:</b></td>
+                            <td>@scriptData["Comments"]</td>
+                        </tr>
+                        <tr>
+                            <td><b>Approved:</b></td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td><b>Conflicts:</b></td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (Model.Tables.Count > 2 && Model.Tables[2].Rows.Count > 0)
+            {
+                <!-- Single Table Column -->
+                <div class="col-md-12">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="text-center">Script Applied To</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>EnvID</th>
+                                        <th>Environment</th>
+                                        <th>Date Applied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (DataRow row in Model.Tables[2].Rows)
+                                    {
+                                        <tr>
+                                            <td>@row["EnvID"]</td>
+                                            <td><font color="#ff0000">@row["EnvName"]</font></td>
+                                            <td>@row["DateApplied"]</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="text-center">Promote Script</h5>
+                <p class="text-center">(For DBA and SCM use)</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" checked disabled id="DevInt1" name="DevInt1" value="True"><b>DevInt1:</b></td>
+                            <td><input type="checkbox" checked disabled id="Dev4" name="Dev4" value="True"><b>Dev4:</b></td>
+                            <td><input type="checkbox" checked disabled id="Azure-QA" name="Azure-QA" value="True"><b>Azure-QA:</b></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" checked disabled id="Prod" name="Prod" value="True"><b>Prod:</b></td>
+                            <td><input type="checkbox" checked disabled id="EU-Prod" name="EU-Prod" value="True"><b>EU-Prod:</b></td>
+                            <td><input type="checkbox" checked disabled id="Azure-Stg" name="Azure-Stg" value="True"><b>Azure-Stg:</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-center">
+                    <input type="hidden" name="ScriptName" id="ScriptName" value="OperationalDB_dbc_11.00.1893.001">
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <script>
+     
+
+        function popupwindow(url) {
+            window.open(url, '_blank', 'width=800,height=600');
+        }
+
+        $(document).ready(function () {
+            function extractVersion(scriptName) {
+                // Split the scriptName by underscores
+                var scriptNameParts = scriptName.split('_');
+
+                if (scriptNameParts.length < 3) {
+                    throw new Error("Invalid script name format.");
+                }
+
+                // Extract the version part (from the second underscore to the last dot)
+                var versionPart = scriptNameParts.slice(2).join('_').split('.');
+                if (versionPart.length < 3) {
+                    throw new Error("Invalid version format in script name.");
+                }
+
+                // Combine the first three segments
+                var version = versionPart.slice(0, 3).join('.');
+
+                return version;
+            }
+
+            // Ensure this is properly set from the server-side code
+            var scriptName = "@scriptName";
+            var version = extractVersion(scriptName);
+            console.log(version); // Output: 11.00.1900
+
+            // Set the URL for the script link dynamically
+            var dataModelVersion = "DataModel11.0"; // Dynamic DataModel version
+            var scriptUrl = `https://qltlbbrscm02.corp.brassring.com/GetScripts/ShowGitScript.aspx?FName=Database/${dataModelVersion}/Version ${version}/${scriptName}.sql`;
+            $('#scriptLink').attr('onclick', `popupwindow('${scriptUrl}')`);
+        });
+    </script>
+}
+
+
+ *@
+
+
+ @model System.Data.DataSet
+
+@using System.Data
+
+@{
+    var scriptName = Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0 ? Model.Tables[0].Rows[0]["ScriptName"].ToString() : "";
+}
+<style>
+    /* General card styling */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #f8f9fa; /* Light gray background */
+    border-bottom: none;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Table Styling */
+.table {
+    margin-bottom: 0;
+}
+
+.table-bordered {
+    border-color: #dee2e6;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.table-sm th, .table-sm td {
+    padding: 0.5rem;
+}
+
+/* Link Styling */
+#scriptLink {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#scriptLink:hover {
+    text-decoration: underline;
+    color: #dc3545; /* Bootstrap's danger color */
+}
+
+/* Checkbox styling for form checks */
+.form-check-input {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    font-weight: 500;
+}
+
+/* Additional text styling */
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* Promote Script Section */
+.card-header p {
+    margin-top: 0.5rem;
+    color: #6c757d;
+}
+
+.table-sm td, .table-sm th {
+    padding: 0.5rem;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2); /* Makes checkboxes larger for better visibility */
+}
+
+/* Custom button for promoting the script */
+#scriptDetailsForm .btn {
+    background-color: #007bff; /* Bootstrap's primary color */
+    color: #fff;
+    border-radius: 0.25rem;
+}
+
+#scriptDetailsForm .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Table headers */
+.table-light th {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+/* Popup Window Styling */
+#popupWindow {
+    width: 800px;
+    height: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+</style>
+
+@if (Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+{
+    var scriptData = Model.Tables[0].Rows[0];
+    <form id="scriptDetailsForm" method="post" action="">
+        <div class="card shadow mb-4">
+            <div class="card-header text-center bg-light">
+                <h5 class="mb-0">Script Data</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered">
+                    <tbody>
+                        <tr>
+                            <td><strong>Script Name:</strong></td>
+                            <td>
+                                @{
+                                    var scriptUrl = "#"; // Placeholder, will be replaced by jQuery
+                                }
+                                <a href="#" id="scriptLink" class="text-danger">
+                                    @scriptData["ScriptName"]
+                                </a> (Click file name to view)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date Requested:</strong></td>
+                            <td>@scriptData["DateRequested"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Requestor:</strong></td>
+                            <td>@scriptData["Requestor"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database Schema:</strong></td>
+                            <td>@scriptData["DatabaseSchema"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Application:</strong></td>
+                            <td>@scriptData["AppVersion"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Entities Affected:</strong></td>
+                            <td>@scriptData["EntitiesAffected"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Comments:</strong></td>
+                            <td>@scriptData["Comments"]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Approved:</strong></td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Conflicts:</strong></td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (Model.Tables.Count > 2 && Model.Tables[2].Rows.Count > 0)
+            {
+                <!-- Environment Table -->
+                <div class="col-md-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-center bg-light">
+                            <h5 class="mb-0">Script Applied To</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>EnvID</th>
+                                            <th>Environment</th>
+                                            <th>Date Applied</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (DataRow row in Model.Tables[2].Rows)
+                                        {
+                                            <tr>
+                                                <td>@row["EnvID"]</td>
+                                                <td class="text-danger">@row["EnvName"]</td>
+                                                <td>@row["DateApplied"]</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header text-center bg-light">
+                <h5 class="mb-0">Promote Script</h5>
+                <p class="text-muted mb-0">(For DBA and SCM use)</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="DevInt1" name="DevInt1" value="True">
+                                    <label for="DevInt1" class="form-check-label"><strong>DevInt1</strong></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="Dev4" name="Dev4" value="True">
+                                    <label for="Dev4" class="form-check-label"><strong>Dev4</strong></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="Azure-QA" name="Azure-QA" value="True">
+                                    <label for="Azure-QA" class="form-check-label"><strong>Azure-QA</strong></label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="Prod" name="Prod" value="True">
+                                    <label for="Prod" class="form-check-label"><strong>Prod</strong></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="EU-Prod" name="EU-Prod" value="True">
+                                    <label for="EU-Prod" class="form-check-label"><strong>EU-Prod</strong></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked disabled id="Azure-Stg" name="Azure-Stg" value="True">
+                                    <label for="Azure-Stg" class="form-check-label"><strong>Azure-Stg</strong></label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-center">
+                    <input type="hidden" name="ScriptName" id="ScriptName" value="OperationalDB_dbc_11.00.1893.001">
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function popupwindow(url) {
+            window.open(url, '_blank', 'width=800,height=600');
+        }
+
+        $(document).ready(function () {
+            function extractVersion(scriptName) {
+                var scriptNameParts = scriptName.split('_');
+                if (scriptNameParts.length < 3) {
+                    throw new Error("Invalid script name format.");
+                }
+
+                var versionPart = scriptNameParts.slice(2).join('_').split('.');
+                if (versionPart.length < 3) {
+                    throw new Error("Invalid version format in script name.");
+                }
+
+                var version = versionPart.slice(0, 3).join('.');
+                return version;
+            }
+
+            var scriptName = "@scriptName";
+            var version = extractVersion(scriptName);
+            console.log(version); // Output: 11.00.1900
+
+            var dataModelVersion = "DataModel11.0";
+            var scriptUrl = `https://qltlbbrscm02.corp.brassring.com/GetScripts/ShowGitScript.aspx?FName=Database/${dataModelVersion}/Version ${version}/${scriptName}.sql`;
+            $('#scriptLink').attr('onclick', `popupwindow('${scriptUrl}')`);
+        });
+    </script>
+}

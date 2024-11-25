@@ -1,0 +1,397 @@
+﻿@* 
+ @model WebApplication1.Models.FilterViewModel
+
+@{
+    Layout = "~/views/shared/_layout1.cshtml";
+    ViewData["Title"] = "Builds";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/site.css">
+    <style>
+        .table {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            width: fit-content;
+        }
+
+            .table th, .table td {
+                vertical-align: middle;
+                text-align: center;
+                width:fit-content;
+                
+            }
+
+        .form-inline {
+            margin-top: 30px;
+            margin-right: 15px;
+            justify-content: center;
+            margin-left: 30px;
+        }
+
+        .action-links {
+            display: flex;
+            justify-content: center;
+        }
+
+            .action-links a {
+                margin: 0 5px;
+            }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mb-4">
+            <form asp-action="Filter" method="post" class="form-inline justify-content-center">
+                <div class="form-group mb-2">
+                    <input type="submit" value="Show matching builds" class="btn btn-primary" />
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="BuildPattern" class="sr-only">Matching substring</label>
+                    <input asp-for="BuildPattern" class="form-control ml-2" placeholder="Matching substring" size="10" />
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ShowInactive" class="form-check-input" type="checkbox" id="ShowInactive" />
+                        <label class="form-check-label" for="ShowInactive"><b>Show inactive</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ProdOnly" class="form-check-input" type="checkbox" id="ProdOnly" />
+                        <label class="form-check-label" for="ProdOnly"><b>Show Production Releases Only</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ShowUnreleased" class="form-check-input" type="checkbox" id="ShowUnreleased" />
+                        <label class="form-check-label" for="ShowUnreleased"><b>Show Unreleased</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="Tickets" class="form-check-input" type="checkbox" id="Tickets" />
+                        <label class="form-check-label" for="Tickets"> <b>Show with Tickets</b></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr />
+
+        @if (Model.Builds.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Make Done On</th>
+                        <th scope="col">Build (Old Style)</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">CQA</th>
+                        <th scope="col">CSTG</th>
+                        <th scope="col">PR</th>
+                        <th scope="col">EU</th>
+                        <th scope="col">Manage Build</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var build in Model.Builds)
+                    {
+                        <tr>
+                            <td>@build.DateAdded.ToString("yyyy-MM-dd")</td>
+                            <td>@build.BuildOldStyle</td>
+                            @if (DateTime.TryParse(build.Label, out DateTime labelDate))
+                            {
+                                <td>Non-Code</td>
+                            }
+                            else
+                            {
+                                <td>@build.Label</td>
+                            }
+                            <td>@build.EnvAbbreviations[0]</td> <!-- CQA -->
+                            <td>@build.EnvAbbreviations[1]</td> <!-- CSTG -->
+                            <td>@build.EnvAbbreviations[2]</td> <!-- PR -->
+                            <td>@build.EnvAbbreviations[3]</td> <!-- EU -->
+                            <td class="action-links">
+                                <a href="@Url.Action("ModifyRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm" style="background-color: #007BFF; color: white;">Modify</a>
+                                <a href="@Url.Action("PromoteRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm" style="background-color: #ffc107; color: black;">Merge</a>
+
+
+                                @if (build.HasSpecialInstructionsOrConfigChanges)
+                                {
+                                    <a href="@Url.Action("ModifyRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm btn-info">SI</a>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p><em>No matching builds.</em></p>
+        }
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        function shrinkColumns() {
+            var rows = document.querySelectorAll('table tbody tr');
+            var columnsToCheck = [3, 4, 5, 6]; // Indices for CQA, CSTG, PR, EU columns
+
+            columnsToCheck.forEach(function (colIndex) {
+                var shouldHide = true;
+
+                rows.forEach(function (row) {
+                    var cell = row.cells[colIndex];
+                    if (cell && cell.innerHTML.trim() !== "") {
+                        shouldHide = false;
+                    }
+                });
+
+                if (shouldHide) {
+                    document.querySelector('table thead tr th:nth-child(' + (colIndex + 1) + ')').style.display = 'none';
+                    rows.forEach(function (row) {
+                        row.cells[colIndex].style.display = 'none';
+                    });
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            shrinkColumns();
+        });
+    </script>
+</body>
+</html>
+ *@
+
+
+ @model WebApplication1.Models.FilterViewModel
+
+@{
+    Layout = "~/views/shared/_layout1.cshtml";
+    ViewData["Title"] = "Builds";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/site.css">
+    <style>
+        .table {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            width: fit-content;
+        }
+
+            .table th, .table td {
+                vertical-align: middle;
+                text-align: center;
+                width: fit-content;
+            }
+
+        .form-inline {
+            margin-top: 20px;
+            margin-right: 120px;
+            justify-content: center;
+            margin-left: 30px;
+        }
+
+
+        .action-links {
+            display: flex;
+            justify-content: center;
+        }
+
+            .action-links a {
+                margin: 0 5px;
+            }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .search-box {
+            margin: 20px auto;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            border-radius: 50px;
+            padding-left: 20px;
+            padding-right: 40px;
+            border: 2px solid #007BFF;
+            font-size: 16px;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #007BFF;
+        }
+
+            .search-button:hover {
+                color: #0056b3;
+            }
+
+        .form-check-input {
+            width: 20px; /* Increase checkbox size */
+            height: 20px; /* Increase checkbox size */
+        }
+
+        .form-check-label {
+            font-weight: bold; /* Make the label text bold */
+            font-size: 18px; /* Optionally increase the font size for better visibility */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mb-4">
+            <!-- Updated Search Form -->
+            <form asp-action="Filter" method="post" class="form-inline justify-content-center">
+                <div class="search-box position-relative">
+                    <input asp-for="BuildPattern" class="form-control search-input" placeholder="Search here..." />
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+         
+                <div class="form-group mx-sm-3 mb-2">
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ShowInactive" class="form-check-input" type="checkbox" id="ShowInactive" />
+                        <label class="form-check-label" for="ShowInactive"><b>Show inactive</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ProdOnly" class="form-check-input" type="checkbox" id="ProdOnly" />
+                        <label class="form-check-label" for="ProdOnly"><b>Show Production Releases Only</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ShowUnreleased" class="form-check-input" type="checkbox" id="ShowUnreleased" />
+                        <label class="form-check-label" for="ShowUnreleased"><b>Show Unreleased</b></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="Tickets" class="form-check-input" type="checkbox" id="Tickets" />
+                        <label class="form-check-label" for="Tickets"> <b>Show with Tickets</b></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr />
+
+        @if (Model.Builds.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Make Done On</th>
+                        <th scope="col">Build (Old Style)</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">CQA</th>
+                        <th scope="col">CSTG</th>
+                        <th scope="col">PR</th>
+                        <th scope="col">EU</th>
+                        <th scope="col">Manage Build</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var build in Model.Builds)
+                    {
+                        <tr>
+                            <td>@build.DateAdded.ToString("yyyy-MM-dd")</td>
+                            <td>@build.BuildOldStyle</td>
+                            @if (DateTime.TryParse(build.Label, out DateTime labelDate))
+                            {
+                                <td>Non-Code</td>
+                            }
+                            else
+                            {
+                                <td>@build.Label</td>
+                            }
+                            <td>@build.EnvAbbreviations[0]</td> <!-- CQA -->
+                            <td>@build.EnvAbbreviations[1]</td> <!-- CSTG -->
+                            <td>@build.EnvAbbreviations[2]</td> <!-- PR -->
+                            <td>@build.EnvAbbreviations[3]</td> <!-- EU -->
+                            <td class="action-links">
+                                <a href="@Url.Action("ModifyRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm" style="background-color: #007BFF; color: white;">Modify</a>
+                                <a href="@Url.Action("PromoteRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm" style="background-color: #ffc107; color: black;">Merge</a>
+
+                                @if (build.HasSpecialInstructionsOrConfigChanges)
+                                {
+                                    <a href="@Url.Action("ModifyRelease", "Sanji", new { IID = build.Id })" class="btn btn-sm btn-info">SI</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p><em>No matching builds.</em></p>
+        }
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        function shrinkColumns() {
+            var rows = document.querySelectorAll('table tbody tr');
+            var columnsToCheck = [3, 4, 5, 6]; // Indices for CQA, CSTG, PR, EU columns
+
+            columnsToCheck.forEach(function (colIndex) {
+                var shouldHide = true;
+
+                rows.forEach(function (row) {
+                    var cell = row.cells[colIndex];
+                    if (cell && cell.innerHTML.trim() !== "") {
+                        shouldHide = false;
+                    }
+                });
+
+                if (shouldHide) {
+                    document.querySelector('table thead tr th:nth-child(' + (colIndex + 1) + ')').style.display = 'none';
+                    rows.forEach(function (row) {
+                        row.cells[colIndex].style.display = 'none';
+                    });
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            shrinkColumns();
+        });
+    </script>
+</body>
+</html>

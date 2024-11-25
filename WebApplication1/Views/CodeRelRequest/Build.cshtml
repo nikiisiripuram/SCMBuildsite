@@ -1,0 +1,271 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Release Request";
+}
+@model IEnumerable<Build>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+       
+    }
+
+    .navbar {
+        position: fixed;
+        width: 120%;
+        margin-left: -30px;
+        margin-top: -20px;
+        z-index: 100;
+    }
+
+    .container-fluid.build-container {
+        max-width: 1100px;
+        margin: 90px auto 20px auto; /* 30px gap to the existing margin */
+        background-color: whitesmoke;
+        background-image: none;
+        /* Rounded corners */
+        border-radius: 15px;
+        /* Smooth transition for changes (e.g., background-color, border, etc.) */
+        transition: all 0.3s ease-in-out;
+        /* Box shadow for better appearance (optional) */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Smooth scrolling behavior */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .main {
+        color: #ffffff;
+        font-size: 10pt;
+    }
+
+        .main:link, .main:visited, .main:hover {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-top: 0;
+    }
+
+    .card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    .card-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .specific {
+        font-size: 16px;
+        margin-top: 5px;
+    }
+
+    .actions-button {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    h1 {
+        color: #000;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 40px;
+        padding: 10px 0;
+    }
+
+</style>
+
+<script type="text/javascript">
+    function populateDropdown() {
+        var list1 = document.getElementById('pipelineDropdown');
+        list1.options[0] = new Option('--ALL Branches--', '');
+        list1.options[1] = new Option('AssessmentBatch-Pipeline', 'AssessmentBatch-Pipeline');
+        list1.options[2] = new Option('Burning-Glass-Pipeline', 'Burning-Glass-Pipeline');
+        list1.options[3] = new Option('Companion-Products-Pipeline', 'Companion-Products-Pipeline');
+        list1.options[4] = new Option('Dashboard-Pipeline', 'Dashboard-Pipeline');
+        list1.options[5] = new Option('DIT-Pipeline', 'DIT-Pipeline');
+        list1.options[6] = new Option('DST-Pipeline', 'DST-Pipeline');
+        list1.options[7] = new Option('Enterprise-Pipeline', 'Enterprise-Pipeline');
+        list1.options[8] = new Option('Enterprise-Utilities-Pipeline', 'Enterprise-Utilities-Pipeline');
+        list1.options[9] = new Option('Integration-Pipeline', 'Integration-Pipeline');
+        list1.options[10] = new Option('Kenexa-Personalization-Pipeline', 'Kenexa-Personalization-Pipeline');
+        list1.options[11] = new Option('KRBUtilities-Pipeline', 'KRBUtilities-Pipeline');
+        list1.options[12] = new Option('Lead-Manager-Pipeline', 'Lead-Manager-Pipeline');
+        list1.options[13] = new Option('Purge-Utilities-Pipeline', 'Purge-Utilities-Pipeline');
+        list1.options[14] = new Option('Reporting-Standard-Pipeline', 'Reporting-Standard-Pipeline');
+        list1.options[15] = new Option('Scheduler-Pipeline', 'Scheduler-Pipeline');
+        list1.options[16] = new Option('SCM-Pipeline', 'SCM-Pipeline');
+        list1.options[17] = new Option('Search-Utilities-Pipeline', 'Search-Utilities-Pipeline');
+        list1.options[18] = new Option('TG-Legacy-Pipeline', 'TG-Legacy-Pipeline');
+        list1.options[19] = new Option('TG-Web-Pipeline', 'TG-Web-Pipeline');
+        list1.options[20] = new Option('TGUtilities-Pipeline', 'TGUtilities-Pipeline');
+        list1.options[21] = new Option('Workbench-Pipeline', 'Workbench-Pipeline');
+        list1.options[22] = new Option('XMAP-Pipeline', 'XMAP-Pipeline');
+        list1.options[23] = new Option('BGCS-Pipeline', 'BGCS-Pipeline');
+    }
+
+    function renderBuilds(builds) {
+        var container = document.querySelector('.cards-container');
+        container.innerHTML = '';
+        builds.forEach(function (build) {
+            var card = `
+                    <div class="card">
+                        <div class="card-header">
+                            Build: ${build.buildOldStyle}
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Branch</th>
+                                        <th style="width: 30%;">Label</th>
+                                        <th>Requested By</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>${new Date(build.dateAdded).toISOString().split('T')[0]}</td>
+                                        <td>${build.branchFloating}</td>
+                                        <td style="width: 30%;">${build.label}</td>
+                                        <td>${build.email}</td>
+                                        <td>
+                                            <a class="btn btn-secondary actions-button main" href="/New/Index?IID=${build.iid}&Specific=${build.specific}">Release</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            ${build.specific ? `
+                                <div class="specific">
+                                    <p>${build.specific}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>`;
+            container.insertAdjacentHTML('beforeend', card);
+        });
+    }
+
+    function closePage() {
+        window.location.href = '/';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        populateDropdown();
+
+        document.getElementById('pipelineDropdown').addEventListener('change', function () {
+            var selectedBranch = this.value;
+            fetch('@Url.Action("FilterBuilds", "CodeRelRequest")?branch=' + selectedBranch)
+                .then(response => response.json())
+                .then(data => renderBuilds(data))
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+<body>
+    <div class="container-fluid build-container">
+        <h1 style="padding: 50px;"><b>Avaliable Builds for a Code Release Request</b></h1>
+        <p style="margin-left: 330px; margin-top: -37px; color: #6c757d;">(To Raise requests for Code Release Requests)</p>
+
+        <div class="form-container">
+            <form method="get" action="@Url.Action("Build", "CodeRelRequest")">
+                <div class="form-group">
+                    <label for="pipelineDropdown"><b style="padding:10px">Filter by Branch</b></label>
+                    <select id="pipelineDropdown" name="branch" class="form-control" style="margin-bottom: 70px; width: 25%;"></select>
+                </div>
+            </form>
+        </div>
+        <div class="cards-container">
+            @foreach (var build in Model)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        Build: @build.BuildOldStyle
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Branch</th>
+                                    <th style="width: 30%;">Label</th>
+                                    <th>Requested By</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@build.DateAdded.ToString("yyyy-MM-dd")</td>
+                                    <td>@build.BranchFloating</td>
+                                    <td style="width: 30%;">@build.Label</td>
+                                    <td>@build.Email</td>
+                                    <td>
+                                        <a class="btn btn-secondary actions-button main" href="@Url.Action("CodeRequest", "CodeRelRequest", new { IID = build.IID, build.Specific })">Release</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @if (!string.IsNullOrEmpty(build.Specific))
+                        {
+                            <div class="specific">
+                                <p>@build.Specific</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>

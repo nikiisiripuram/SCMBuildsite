@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "SCM Build Site";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="cd.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Title -->
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#" style="float:right;">
+            <img src="https://mma.prnewswire.com/media/386629/Infinite_Computer_Solutions_Logo.jpg?w=200" alt="Infinite" height="30">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Auth" asp-action="DevOpes2">
+                        <span style="font-size: 18px; font-weight: bold; margin-left:-10%;">DevOps Arena</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="sidebar close">
+        <header>
+            <i class='fas fa-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li data-toggle="tooltip" title="Build Releases">
+                        <a class="tools" asp-controller="Zoro" asp-action="Builds">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-cogs -icon me-3"></i>
+                                <span class="text nav-text">Build Releases</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="US ALL Smoke Test">
+                        <a class="tools" asp-controller="SmokeTest" asp-action="USprod">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-fire -icon me-3"></i>
+                                <span class="text nav-text">US ALL Smoke Test</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="Smoke Test Staging">
+                        <a class="tools" asp-controller="SmokeTest" asp-action="Onestg">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fab fa-cloudscale -icon me-3"></i>
+                                <span class="text nav-text">Smoke Test Staging</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="Smoke Test EU-Prod">
+                        <a class="tools" asp-controller="SmokeTest" asp-action="EUprod">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-globe-europe -icon me-3"></i>
+                                <span class="text nav-text">Smoke Test EU-Prod</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="QA/Dev Smoke Test">
+                        <a class="tools" asp-controller="SmokeTest" asp-action="QA">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-vial -icon me-3"></i>
+                                <span class="text nav-text">QA/Dev Smoke Test</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="US BigIP Status">
+                        <a class="tools" asp-controller="BigIpStatus" asp-action="USBigIpStatus">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-network-wired -icon me-3"></i>
+                                <span class="text nav-text">US BigIP Status</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="EU BigIP Status">
+                        <a class="tools" asp-controller="BigIpStatus" asp-action="EUBigIpStatus">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-globe-europe -icon me-3"></i>
+                                <span class="text nav-text">EU BigIP Status</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li data-toggle="tooltip" title="One-Stg BigIP Status">
+                        <a class="tools" asp-controller="BigIpStatus" asp-action="StgBigIpStatus">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-server -icon me-3"></i>
+                                <span class="text nav-text">One-Stg BigIP Status</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-toggle="tooltip" title="OMG DashBoard">
+                        <a asp-controller="Auth" asp-action="OMGDashBoard">
+                            <div style="display:flex; align-items: center;">
+                                <i class="icon fas fa-tachometer-alt grey-icon me-2"></i> <!-- Changed icon here -->
+                                <span class="text nav-text">OMG DashBoard</span>
+                            </div>
+                        </a>
+                    </li>
+                    
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    <!-- JavaScript -->
+    <script>
+        $(document).ready(function () {
+            const sidebar = $('.sidebar');
+            const toggle = $('.toggle');
+            const searchBtn = $('.search-box');
+            const modeSwitch = $('.toggle-switch');
+            const modeText = $('.mode-text');
+
+            toggle.on('click', function () {
+                sidebar.toggleClass('close');
+            });
+
+            searchBtn.on('click', function () {
+                sidebar.removeClass('close');
+            });
+
+            modeSwitch.on('click', function () {
+                $('body').toggleClass('dark');
+                modeText.text($('body').hasClass('dark') ? 'Light mode' : 'Dark mode');
+            });
+
+            // Close sidebar when clicking on empty space
+            $(document).on('click', function (event) {
+                if (!sidebar.is(event.target) && sidebar.has(event.target).length === 0) {
+                    sidebar.addClass('close');
+                }
+            });
+
+            // Keep sidebar open while hovering over it
+            sidebar.on('mouseenter', function () {
+                sidebar.removeClass('close');
+            }).on('mouseleave', function () {
+                sidebar.addClass('close');
+            });
+
+            $('.tools').on("click", function (e) {
+                e.preventDefault();
+                window.location.href = e.currentTarget.href;
+                var newName = e.currentTarget.innerText;
+                $('#sidebarSection').html(newName);
+            });
+        });
+
+        function getScriptData() {
+            var scriptName = $('#ScriptName').val();
+            $.ajax({
+                url: '@Url.Action("Details", "Script")',
+                type: 'GET',
+                data: { scriptName: scriptName },
+                success: function (data) {
+                    $('#scriptDetails').html(data);
+                },
+                error: function () {
+                    alert('Failed to retrieve data.');
+                }
+            });
+        }
+    </script>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="sidebar.js"></script>
+</body>
+
+</html>

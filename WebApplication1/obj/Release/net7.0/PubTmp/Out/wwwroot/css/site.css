@@ -1,0 +1,283 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    /* ===== Colors ===== */
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #695cfe;
+    --primary-color-light: #f6f5ff;
+    --toggle-color: #ddd;
+    --text-color: #3a3b3c;
+    --icon-color: #000; /* Black color for icons */
+    --hover-color: #f8f9fa;
+    --hover-icon-color: #fff;
+    --hover-text-color: #FFFFFF; /* New color for text on hover */
+    /* ====== Transition ====== */
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+
+body {
+    min-height: 100vh;
+    background: url("https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed; /* Makes background fixed */
+    transition: var(--tran-05);
+}
+
+::selection {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Dark theme adjustments */
+body.dark {
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    --primary-color: #3a3b3c;
+    --primary-color-light: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
+    --icon-color: #ccc; /* Dark mode icon color */
+}
+
+body.dark {
+    background-color: var(--body-color);
+    background: url('path/to/your/dark-background-image.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed; /* Makes background fixed in dark mode too */
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background: var(--sidebar-color);
+    transition: var(--tran-05);
+    z-index: 100;
+}
+
+    .sidebar.close {
+        width: 80px;
+    }
+
+    /* ===== Reusable code - Here ===== */
+    .sidebar li {
+        height: 50px;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .sidebar .icon {
+        min-width: 60px;
+        border-radius: 6px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--icon-color); /* Icon color */
+    }
+
+    .sidebar .text {
+        font-size: 17px;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 1;
+        color: var(--text-color);
+        transition: var(--tran-03);
+    }
+
+    /* Hovering over sidebar changes text and icon colors */
+    .sidebar li a:hover .text {
+        color: var(--hover-text-color); /* New text color on hover */
+    }
+
+    .sidebar li a:hover .icon {
+        color: var(--hover-icon-color); /* White icon color on hover */
+    }
+
+    .sidebar.close .text {
+        opacity: 0;
+    }
+
+    /* =========================== */
+    .sidebar header {
+        position: relative;
+    }
+
+        .sidebar header .image-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar header .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar header .image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .sidebar header .image img {
+                width: 40px;
+                border-radius: 6px;
+            }
+
+        .sidebar header .toggle {
+            position: absolute;
+            top: 50%;
+            right: -25px;
+            transform: translateY(-50%) rotate(180deg);
+            height: 25px;
+            width: 25px;
+            background-color: var(--primary-color);
+            color: var(--sidebar-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--tran-05);
+        }
+
+body.dark .sidebar header .toggle {
+    color: var(--text-color);
+}
+
+.sidebar.close .toggle {
+    transform: translateY(-50%) rotate(0deg);
+}
+
+/* Sidebar menu */
+.sidebar .menu {
+    margin-top: 40px;
+}
+
+.sidebar li a {
+    list-style: none;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: var(--tran-03);
+}
+
+    .sidebar li a:hover {
+        background-color: var(--primary-color);
+        color: var(--hover-icon-color); /* White icon color on hover */
+    }
+
+body.dark .sidebar li a:hover {
+    color: var(--text-color);
+}
+
+.sidebar .menu-bar {
+    height: calc(100% - 55px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+}
+
+.menu-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Responsive sidebar adjustments */
+@media (max-width: 767px) {
+    .sidebar {
+        width: 200px;
+    }
+
+        .sidebar.close {
+            width: 60px;
+        }
+
+    .home {
+        left: 200px;
+        width: calc(100% - 200px);
+    }
+
+    .sidebar.close ~ .home {
+        left: 60px;
+        width: calc(100% - 60px);
+    }
+}
+
+@media (max-width: 575px) {
+    .sidebar {
+        width: 180px;
+    }
+
+        .sidebar.close {
+            width: 50px;
+        }
+
+    .home {
+        left: 180px;
+        width: calc(100% - 180px);
+    }
+
+    .sidebar.close ~ .home {
+        left: 50px;
+        width: calc(100% - 50px);
+    }
+}
+
+/* ===== Home section ===== */
+.home {
+    position: absolute;
+    left: 250px;
+    height: 100vh;
+    width: calc(100% - 250px);
+    transition: var(--tran-05);
+}
+
+    .home .text {
+        font-size: 30px;
+        font-weight: 500;
+        color: var(--text-color);
+        padding: 12px 60px;
+    }
+
+.sidebar.close ~ .home {
+    left: 78px;
+    width: calc(100% - 78px);
+}
+
+body.dark .home .text {
+    color: var(--text-color);
+}
+@media (max-width: 768px) {
+    .card-header, .card-body {
+        padding: 1rem;
+    }
+
+    .table-sm th, .table-sm td {
+        padding: 0.5rem;
+    }
+}

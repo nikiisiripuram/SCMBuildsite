@@ -1,0 +1,311 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Request GitHub Build</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        /* Style for round corners */
+        .container, .card {
+            border-radius: 20px;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 30px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+       
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            console.log('Document ready');
+            var list1 = document.getElementById('firstList');
+            var options = [
+                { text: '--Select--', value: '' },
+                { text: 'Companion-Products-Pipeline', value: 'Companion-Products-Pipeline' },
+                { text: 'Dashboard-Pipeline', value: 'Dashboard-Pipeline' },
+                { text: 'DIT-Pipeline', value: 'DIT-Pipeline' },
+                { text: 'DST-Pipeline', value: 'DST-Pipeline' },
+                { text: 'Enterprise-Pipeline', value: 'Enterprise-Pipeline' },
+                { text: 'Lead-Manager-Pipeline', value: 'Lead-Manager-Pipeline' },
+                { text: 'Reporting-Pipeline', value: 'Reporting-Pipeline' },
+                { text: 'Search-Utilities-Pipeline', value: 'Search-Utilities-Pipeline' },
+                { text: 'Talent-Gateway-Web-Pipeline', value: 'Talent-Gateway-Web-Pipeline' },
+                { text: 'Integration-Pipeline', value: 'Talent-Gateway-Web-Pipeline' },
+                { text: 'TGUtilities-Pipeline', value: 'Talent-Gateway-Web-Pipeline' },
+                { text: 'Workbench-Pipeline', value: 'Workbench-Pipeline' },
+                { text: 'Two-Way-Messaging-Pipeline', value: 'Two-Way-Messaging-Pipeline' }
+            ];
+
+            options.forEach(function (option, index) {
+                list1.options[index] = new Option(option.text, option.value);
+            });
+
+            $('#Builds').change(function () {
+                console.log('Builds changed');
+                updateComponentField();
+            });
+        });
+
+        var buildToComponentMap = {
+            'Companion-Products-Pipeline': 'Companion-Products-Pipeline',
+            'Dashboard-Pipeline': 'Dashboard-Pipeline',
+            'DIT-Pipeline': 'DIT-Pipeline',
+            'DST-Pipeline': 'DST-Pipeline',
+            'Enterprise-Pipeline': 'Enterprise-Pipeline',
+            'Lead-Manager-Pipeline': 'Lead-Manager-Pipeline',
+            'Reporting-Pipeline': 'Reporting-Pipeline',
+            'Search-Utilities-Pipeline': 'Search-Utilities-Pipeline',
+            'TG-Web-Pipeline': 'Talent-Gateway-Web-Pipeline',
+            'TGUtilities-Pipeline': 'Talent-Gateway-Web-Pipeline',
+            'Integration-Pipeline': 'Talent-Gateway-Web-Pipeline',
+            'Workbench-Pipeline': 'Workbench-Pipeline',
+            'Two-Way-Messaging-Pipeline': 'Two-Way-Messaging-Pipeline'
+        };
+
+        function updateComponentField() {
+            var selectedBuild = getBeforeFirstUnderscore($('#Builds').val());
+            console.log('Selected build:', selectedBuild);
+            var component = buildToComponentMap[selectedBuild];
+            console.log('Component:', component);
+            if (component) {
+                $('#firstList').val(component);
+                disableComponentSelection();
+            } else {
+                $('#firstList').val('');
+            }
+            checkFields();
+        }
+
+        function getBeforeFirstUnderscore(str) {
+            var firstUnderscoreIndex = str.indexOf('_');
+            if (firstUnderscoreIndex !== -1) {
+                return str.substring(0, firstUnderscoreIndex);
+            }
+            return str; // Return the original string if no underscore is found
+        }
+
+        function disableComponentSelection() {
+            var componentList = document.getElementById('firstList');
+            componentList.disabled = true;
+            for (var i = 0; i < componentList.options.length; i++) {
+                componentList.options[i].disabled = true;
+            }
+        }
+
+        function callJenkins() {
+            var email = document.getElementById("email").value;
+            var builds = document.getElementById("Builds").value;
+            var component = document.getElementById("firstList").value;
+            var user = "releng";
+            var token = "11b54efb438b749308122cf9135ffe07ed";
+            var xhr = new XMLHttpRequest();
+            var url = `https://nalb-br-labs-jenkins.vip.corp.brassring.com/job/Brassring%20SCM%20Jobs/job/Deploy_Code_Azure_Dev/buildWithParameters?Builds=${builds}&Component=${component}&Email=${email}`;
+            xhr.open("POST", url);
+            xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user + ":" + token));
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+                    console.log("call complete");
+                    var queueUrl = xhr.getResponseHeader('Location') + "/api/json";
+                    callBuildQueueUrl(queueUrl);
+                }
+            };
+            xhr.send();
+        }
+
+        function callBuildQueueUrl(queueUrl) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    if (!obj.executable || !obj.executable.url) {
+                        setTimeout(function () {
+                            callBuildQueueUrl(queueUrl);
+                        }, 1000); // Adjust the timeout as needed
+                    } else {
+                        var buildUrl = obj.executable.url;
+                        if (confirm("Request Accepted. Here's your build: " + buildUrl)) {
+                            window.location.reload();
+                        }
+                    }
+                }
+            };
+            xmlhttp.open("GET", queueUrl, true);
+            xmlhttp.send();
+        }
+
+        function fetchBuildLabels() {
+            var email = $("#email").val();
+            $.ajax({
+                url: '@Url.Action("FetchBuildLabels", "Home")',
+                type: 'POST',
+                data: { email: email },
+                success: function (response) {
+                    var builds = $("#Builds");
+                    builds.empty();
+                    if (response.labels && response.labels.length > 0) {
+                        response.labels.forEach(function (label) {
+                            builds.append($('<option>', { value: label, text: label }));
+                        });
+                    } else {
+                        builds.append($('<option>', { text: 'No labels found' }));
+                    }
+                    checkFields();
+                    updateComponentField(); // Auto select component on initial load
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#email").on("keyup", function () {
+                fetchBuildLabels();
+            });
+
+            $("#fetchBuildLabels").on("click", function () {
+                fetchBuildLabels();
+            });
+        });
+
+        function checkFields() {
+            var email = document.getElementById('email').value;
+            var builds = document.getElementById('Builds').value;
+            var component = document.getElementById('firstList').value;
+            var submitBtn = document.getElementById('Submitbtn');
+
+            console.log('Checking fields:', email, builds, component);
+
+            var allFieldsFilled = email && builds && component;
+            submitBtn.disabled = !allFieldsFilled;
+
+            if (allFieldsFilled) {
+                $("#Submitbtn").removeClass("btn-light").addClass("btn-primary");
+            } else {
+                $("#Submitbtn").removeClass("btn-primary").addClass("btn-light");
+            }
+        }
+
+        function validateEmail() {
+            var email = document.getElementById('email').value;
+            var emailError = document.getElementById('emailError');
+
+            // Regular expression for email validation
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+            if (!emailRegex.test(email)) {
+                emailError.style.display = 'inline';
+                document.getElementById('Submitbtn').disabled = true;
+            } else {
+                emailError.style.display = 'none';
+                checkFields();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('email').value = '';
+            document.getElementById('Builds').value = '';
+            document.getElementById('firstList').selectedIndex = 0;
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('Submitbtn').disabled = true;
+        }
+
+        function showConfirmation() {
+            if (confirm("Are you sure you want to submit?")) {
+                callJenkins(); // Call your submit function here
+            } else {
+                cancelSubmit(); // Call the cancel function
+            }
+        }
+
+        function cancelSubmit() {
+            alert("Submission canceled."); // Display a message or perform other actions
+        }
+
+        function closeForm() {
+            // Hide the form
+            document.querySelector(".form-group").parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "none";
+
+            // Redirect to the home page
+            window.location.href = '/'; // Adjust this path if your home page is at a different URL
+        }
+        // Function to show the popup
+    </script>
+</head>
+<body>
+    @{
+        ViewBag.Title = "Deploy Dev Build";
+        var userEmail = ViewBag.UserEmail;
+        var distinctLabels = ViewBag.DistinctLabels as List<string>;
+    }
+
+    <div class="container" style="width: 80%; height: 80vh; margin-top: 80px;">
+        <div class="row justify-content-center align-items-center" style="height: 50%;">
+            <div class="col-md-8">
+                <div class="card" style="height: 100%;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="card-title">
+                                <span>Deploy Dev Build</span>
+                            </h4>
+                            <div class="close-icon" style="cursor: pointer; font-size: 1.5rem;" onclick="closeForm()">✖</div>
+                        </div>
+                        <p style="font-size: 1.1rem; margin-top: 10px; color: #6c757d;">
+                            (To deploy the build into Dev Environment)
+                        </p>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" value="@ViewBag.Email" oninput="validateEmail();checkFields()">
+                            <span id="emailError" style="color: red; display: none;">Please enter a valid email address</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Builds">Builds</label>
+                            <select id="Builds" name="Builds" class="form-control">
+                                @if (ViewBag.Labels != null && ViewBag.Labels.Count > 0)
+                                {
+                                    foreach (var label in ViewBag.Labels)
+                                    {
+                                        <option value="@label">@label</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option>No labels found</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstList">Component</label>
+                            <select class="form-control" id="firstList" name="firstList" onchange="checkFields()" readonly disabled>
+                                <!-- Add options here if needed -->
+                            </select>
+                        </div>
+
+                        <br>
+                        <div class="text-center">
+                            <button type="button" id="Submitbtn" onclick="showConfirmation()" class="btn btn-light" disabled>Submit</button>
+                            <input type="button" value="Reset" class="btn btn-default" onclick="resetForm()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

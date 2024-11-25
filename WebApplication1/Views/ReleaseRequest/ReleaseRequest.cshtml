@@ -1,0 +1,535 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* @model WebApplication1.Controllers.ReleaseRequestViewModel
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Release Request</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        fieldset {
+            flex-flow: row wrap;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+        }
+
+            label[for='releaseSI'], label[for='DBScripts'] {
+                display: block;
+                font-size: 13px;
+                color: #726b6b;
+                background-color: #f9f9f9;
+                width: fit-content;
+            }
+
+        input, textarea, select {
+            vertical-align: middle;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: dodgerblue;
+            border: 1px solid #ddd;
+            color: white;
+            cursor: pointer;
+        }
+
+            button[disabled] {
+                padding: 10px 20px;
+                background-color: #cccccc;
+                border: 1px solid #999999;
+                color: #666666;
+                cursor: not-allowed;
+            }
+
+                button[disabled]:hover {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
+
+            button:hover {
+                background-color: royalblue;
+            }
+
+        h2 {
+            font-weight: 400;
+        }
+
+        legend {
+            font-size: 12px;
+        }
+
+        .fieldset {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        // Add your JavaScript functions here
+        function toggle() {
+            var ele = document.getElementById("releaseSIMin");
+            var ele1 = document.getElementById("releaseSIMax");
+            if (ele.style.display == "block") {
+                ele.style.display = "none";
+                ele1.style.display = "block";
+            } else {
+                ele.style.display = "block";
+                ele1.style.display = "none";
+            }
+        }
+
+        function enableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML == "" && document.getElementById("workItemsError").innerHTML == "" && document.getElementById("txtEmail").value != "" && document.getElementById("workItems").value != "") {
+                document.getElementById("SubmitRequest").removeAttribute("disabled");
+            }
+        }
+
+        function disableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML != "" || document.getElementById("workItemsError").innerHTML != "" || document.getElementById("txtEmail").value == "" || document.getElementById("workItems").value == "") {
+                document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+            }
+        }
+
+        function ValidateEmail() {
+            var email = document.getElementById("txtEmail").value;
+            var lblError = document.getElementById("lblEmailError");
+            lblError.innerHTML = "";
+            var expr = /^[A-Za-z0-9._%+-]+@infinite\.com$/;
+            if (!expr.test(email.toLowerCase()) && email != "") {
+                lblError.innerHTML = "Invalid email address.";
+                disableSubmit();
+            } else {
+                enableSubmit();
+            }
+        }
+
+        function EventReset() {
+            document.getElementById("workItemsHidden").value = "";
+            document.getElementById("lblEmailError").innerHTML = "";
+            document.getElementById("workItemsError").innerHTML = "";
+            document.getElementById("releaseSIMin").innerHTML = "";
+            document.getElementById("dbScripts").innerHTML = "";
+            document.getElementById("dbScriptsDiv").style.display = 'none';
+            document.getElementById("releaseSIDiv").style.display = 'none';
+            document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+        }
+
+        function ValidateWorkItems() {
+            var workItemsInput = document.getElementById("workItems").value;
+            if (workItemsInput == "") {
+                document.getElementById("workItemsHidden").value = "";
+                document.getElementById("releaseSIMin").innerHTML = "";
+                document.getElementById("dbScripts").innerHTML = "";
+                document.getElementById("workItemsError").innerHTML = "";
+                document.getElementById("dbScriptsDiv").style.display = 'none';
+                document.getElementById("releaseSIDiv").style.display = 'none';
+                disableSubmit();
+            }
+            if (workItemsInput != "" && workItemsInput != document.getElementById("workItemsHidden").value) {
+                var wiError = document.getElementById("workItemsError");
+                wiError.innerHTML = "LOADING...";
+                document.getElementById("workItemsHidden").value = workItemsInput;
+                $.ajax({
+                    url: '@Url.Action("ValidateWorkItems", "ReleaseRequest")',
+                    type: 'POST',
+                    data: JSON.stringify({ workItems: workItemsInput }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (result) {
+                        OnSuccess(result);
+                    },
+                    error: function (error) {
+                        OnFailure(error);
+                    }
+                });
+                document.activeElement.blur();
+            }
+        }
+
+        function OnSuccess(result) {
+            var resultArray = result;
+            var wiError = document.getElementById("workItemsError");
+            var dbScrpt = document.getElementById("dbScripts");
+            var SI = document.getElementById("releaseSIMin");
+            SI.innerHTML = "";
+            dbScrpt.innerHTML = "";
+            wiError.innerHTML = "";
+
+            for (var i = 0; i < resultArray.length; i++) {
+                var temp = resultArray[i].split("|||");
+                if (temp[0] == "WI-INVALID" || temp[0] == "DBSRPT-INVALID") {
+                    wiError.innerHTML = temp[1];
+                } else {
+                    if (temp[0] == "DBSRPT-VALID") {
+                        dbScrpt.innerHTML = temp[1];
+                        document.getElementById("dbScriptsDiv").style.display = 'inline';
+                    } else if (temp[0] == "WI-SI") {
+                        if (temp[1].length > 200) {
+                            SI.innerHTML = temp[1].substring(0, 200) + "<a href=\"javascript:toggle()\">(More info)</a>";
+                            document.getElementById("releaseSIMax").innerHTML = temp[1] + "<a href=\"javascript:toggle()\">(Less info)</a>";
+                        } else {
+                            SI.innerHTML = temp[1];
+                        }
+                        document.getElementById("releaseSIDiv").style.display = 'inline';
+                    }
+                }
+            }
+            enableSubmit();
+        }
+
+        function OnFailure(error) {
+            alert("Request failed: " + error);
+        }
+
+        function EventFormSubmission() {
+            var radioButton = document.querySelector('input[name="Clone"]:checked');
+            document.getElementById("CloneTickets").value = radioButton.value;
+            document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("RequestRelease", "CodeReleaseRequestController", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Build and Release Request</h2>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <fieldset class="fieldset">
+                    <legend>Deployment Details</legend>
+                    <label for="ddlBuildLabel">Build Label</label>
+                    @Html.DropDownListFor(m => m.BuildLabel, new SelectList(new[] { "Build1", "Build2" }), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.BuildLabel, "", new { @class = "text-danger" })
+
+                    <label for="ddlBranch">Branch</label>
+                    @Html.DropDownListFor(m => m.Branch, new SelectList(new[] { "Branch1", "Branch2" }), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Branch, "", new { @class = "text-danger" })
+
+                    <label for="ddlTitle">Title</label>
+                    @Html.DropDownListFor(m => m.Title, new SelectList(new[] { "Title1", "Title2" }), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+
+                    <label for="workItems">Work Items</label>
+                    @Html.TextAreaFor(m => m.WorkItems, new { @class = "form-control", rows = 3, onblur = "ValidateWorkItems()" })
+                    @Html.ValidationMessageFor(m => m.WorkItems, "", new { @class = "text-danger" })
+                    <span id="workItemsError" class="text-danger"></span>
+
+                    <div id="dbScriptsDiv" style="display:none;">
+                        <label for="DBScripts">DB Scripts</label>
+                        <span id="dbScripts"></span>
+                    </div>
+
+                    <div id="releaseSIDiv" style="display:none;">
+                        <label for="releaseSI">Service Impact</label>
+                        <span id="releaseSIMin"></span>
+                        <span id="releaseSIMax" style="display:none;"></span>
+                    </div>
+
+                    <label for="txtEmail">Contact Email</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", onblur = "ValidateEmail()" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    <span id="lblEmailError" class="text-danger"></span>
+
+                    <label for="ddlTargetEnv">Target Environment</label>
+                    @Html.DropDownListFor(m => m.TargetEnv, new SelectList(new[] { "Env1", "Env2" }), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.TargetEnv, "", new { @class = "text-danger" })
+
+                    <label for="NonCodeRelease">Is it a non-code release?</label>
+                    @Html.DropDownListFor(m => m.NonCodeRelease, new SelectList(new[] { "NO", "YES" }), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NonCodeRelease, "", new { @class = "text-danger" })
+
+                    <label for="Clone">Clone Tickets</label>
+                    @Html.RadioButtonFor(m => m.CloneTickets, "YES")
+                    <label for="CloneYes">YES</label>
+                    @Html.RadioButtonFor(m => m.CloneTickets, "NO")
+                    <label for="CloneNo">NO</label>
+                    @Html.ValidationMessageFor(m => m.CloneTickets, "", new { @class = "text-danger" })
+                </fieldset>
+                <button id="SubmitRequest" type="submit" class="btn btn-primary" onclick="EventFormSubmission()" disabled>Submit Request</button>
+            </div>
+        </div>
+    }
+</body>
+</html>
+ *@
+
+
+
+
+
+@* 
+@model WebApplication1.Controllers.ReleaseRequest
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Release Request</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        fieldset {
+            flex-flow: row wrap;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+        }
+
+            label[for='releaseSI'], label[for='DBScripts'] {
+                display: block;
+                font-size: 13px;
+                color: #726b6b;
+                background-color: #f9f9f9;
+                width: fit-content;
+            }
+
+        input, textarea, select {
+            vertical-align: middle;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: dodgerblue;
+            border: 1px solid #ddd;
+            color: white;
+            cursor: pointer;
+        }
+
+            button[disabled] {
+                padding: 10px 20px;
+                background-color: #cccccc;
+                border: 1px solid #999999;
+                color: #666666;
+                cursor: not-allowed;
+            }
+
+                button[disabled]:hover {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
+
+            button:hover {
+                background-color: royalblue;
+            }
+
+        h2 {
+            font-weight: 400;
+        }
+
+        legend {
+            font-size: 12px;
+        }
+
+        .fieldset {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        // Add your JavaScript functions here
+        function toggle() {
+            var ele = document.getElementById("releaseSIMin");
+            var ele1 = document.getElementById("releaseSIMax");
+            if (ele.style.display == "block") {
+                ele.style.display = "none";
+                ele1.style.display = "block";
+            } else {
+                ele.style.display = "block";
+                ele1.style.display = "none";
+            }
+        }
+
+        function enableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML == "" && document.getElementById("workItemsError").innerHTML == "" && document.getElementById("txtEmail").value != "" && document.getElementById("workItems").value != "") {
+                document.getElementById("SubmitRequest").removeAttribute("disabled");
+            }
+        }
+
+        function disableSubmit() {
+            if (document.getElementById("lblEmailError").innerHTML != "" || document.getElementById("workItemsError").innerHTML != "" || document.getElementById("txtEmail").value == "" || document.getElementById("workItems").value == "") {
+                document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+            }
+        }
+
+        function ValidateEmail() {
+            var email = document.getElementById("txtEmail").value;
+            var lblError = document.getElementById("lblEmailError");
+            lblError.innerHTML = "";
+            var expr = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!expr.test(email.toLowerCase()) && email != "") {
+                lblError.innerHTML = "Invalid email address.";
+                disableSubmit();
+            } else {
+                enableSubmit();
+            }
+        }
+
+        function EventReset() {
+            document.getElementById("workItemsHidden").value = "";
+            document.getElementById("lblEmailError").innerHTML = "";
+            document.getElementById("workItemsError").innerHTML = "";
+            document.getElementById("releaseSIMin").innerHTML = "";
+            document.getElementById("dbScripts").innerHTML = "";
+            document.getElementById("dbScriptsDiv").style.display = 'none';
+            document.getElementById("releaseSIDiv").style.display = 'none';
+            document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+        }
+
+        function ValidateWorkItems() {
+            var workItemsInput = document.getElementById("workItems").value;
+            if (workItemsInput == "") {
+                document.getElementById("workItemsHidden").value = "";
+                document.getElementById("releaseSIMin").innerHTML = "";
+                document.getElementById("dbScripts").innerHTML = "";
+                document.getElementById("workItemsError").innerHTML = "";
+                document.getElementById("dbScriptsDiv").style.display = 'none';
+                document.getElementById("releaseSIDiv").style.display = 'none';
+                disableSubmit();
+            }
+            if (workItemsInput != "" && workItemsInput != document.getElementById("workItemsHidden").value) {
+                var wiError = document.getElementById("workItemsError");
+                wiError.innerHTML = "LOADING...";
+                document.getElementById("workItemsHidden").value = workItemsInput;
+                $.ajax({
+                    url: '@Url.Action("ValidateWorkItems", "ReleaseRequest")',
+                    type: 'POST',
+                    data: JSON.stringify({ workItems: workItemsInput }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (result) {
+                        OnSuccess(result);
+                    },
+                    error: function (error) {
+                        OnFailure(error);
+                    }
+                });
+                document.activeElement.blur();
+            }
+        }
+
+        function OnSuccess(result) {
+            var resultArray = result;
+            var wiError = document.getElementById("workItemsError");
+            var dbScrpt = document.getElementById("dbScripts");
+            var SI = document.getElementById("releaseSIMin");
+            SI.innerHTML = "";
+            dbScrpt.innerHTML = "";
+            wiError.innerHTML = "";
+
+            for (var i = 0; i < resultArray.length; i++) {
+                var temp = resultArray[i].split("|||");
+                if (temp[0] == "WI-INVALID" || temp[0] == "DBSRPT-INVALID") {
+                    wiError.innerHTML = temp[1];
+                } else {
+                    if (temp[0] == "DBSRPT-VALID") {
+                        dbScrpt.innerHTML = temp[1];
+                        document.getElementById("dbScriptsDiv").style.display = 'inline';
+                    } else if (temp[0] == "WI-SI") {
+                        if (temp[1].length > 200) {
+                            SI.innerHTML = temp[1].substring(0, 200) + "<a href=\"javascript:toggle()\">(More info)</a>";
+                            document.getElementById("releaseSIMax").innerHTML = temp[1] + "<a href=\"javascript:toggle()\">(Less info)</a>";
+                        } else {
+                            SI.innerHTML = temp[1];
+                        }
+                        document.getElementById("releaseSIDiv").style.display = 'inline';
+                    }
+                }
+            }
+            enableSubmit();
+        }
+
+        function OnFailure(error) {
+            alert("Request failed: " + error);
+        }
+
+        function EventFormSubmission() {
+            var radioButton = document.querySelector('input[name="Clone"]:checked');
+            document.getElementById("CloneTickets").value = radioButton.value;
+            document.getElementById("SubmitRequest").setAttribute("disabled", "disabled");
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("Index", "ReleaseRequest", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Build and Release Request</h2>
+                <fieldset class="fieldset">
+                    <legend>Deployment Details</legend>
+                    <label for="ddlBuildLabel">Build Label</label>
+                    @Html.DropDownListFor(m => m.BuildLabel, new SelectList(new[] { "Build1", "Build2" }), new { @class = "form-control" })
+                    <label for="ddlBranch">Branch</label>
+                    @Html.DropDownListFor(m => m.Branch, new SelectList(new[] { "Branch1", "Branch2" }), new { @class = "form-control" })
+                    <label for="ddlTitle">Title</label>
+                    @Html.DropDownListFor(m => m.Title, new SelectList(new[] { "Title1", "Title2" }), new { @class = "form-control" })
+                    <label for="workItems">Work Items</label>
+                    @Html.TextAreaFor(m => m.WorkItems, new { @class = "form-control", rows = 3, onblur = "ValidateWorkItems()" })
+                    <span id="workItemsError" class="text-danger"></span>
+                    <div id="dbScriptsDiv" style="display:none;">
+                        <label for="DBScripts">DB Scripts</label>
+                        <span id="dbScripts"></span>
+                    </div>
+                    <div id="releaseSIDiv" style="display:none;">
+                        <label for="releaseSI">Service Impact</label>
+                        <span id="releaseSIMin"></span>
+                        <span id="releaseSIMax" style="display:none;"></span>
+                    </div>
+                    <label for="txtEmail">Contact Email</label>
+                    @Html.TextBoxFor(m => m.ContactEmail, new { @class = "form-control", onblur = "ValidateEmail()" })
+                    <span id="lblEmailError" class="text-danger"></span>
+                    <label for="ddlTargetEnv">Target Environment</label>
+                    @Html.DropDownListFor(m => m.TargetEnv, new SelectList(new[] { "Env1", "Env2" }), new { @class = "form-control" })
+                    <label for="NonCodeRelease">Is it a non-code release?</label>
+                    @Html.DropDownListFor(m => m.NonCodeRelease, new SelectList(new[] { "NO", "YES" }), new { @class = "form-control" })
+                    <label for="Clone">Clone Tickets</label>
+                    @Html.RadioButtonFor(m => m.CloneTickets, "YES")
+                    <label for="CloneYes">YES</label>
+                    @Html.RadioButtonFor(m => m.CloneTickets, "NO")
+                    <label for="CloneNo">NO</label>
+                </fieldset>
+                <button id="SubmitRequest" type="submit" class="btn btn-primary" onclick="EventFormSubmission()" disabled>Submit Request</button>
+            </div>
+        </div>
+    }
+</body>
+</html>
+ *@

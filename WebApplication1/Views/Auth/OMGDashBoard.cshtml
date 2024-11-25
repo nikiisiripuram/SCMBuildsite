@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Increase the width and height of the container */
+    .container {
+        padding-top: 40px;
+        display: none;
+        width: 90%; /* Increase the width of the container */
+        max-width: 1600px; /* Limit the maximum width */
+        height: 700px; /* Increase the height of the container */
+        margin: 0 auto; /* Center the container */
+    }
+
+    .back-button {
+        display: none;
+    }
+
+    .card {
+        background-color: white;
+        width: 100%; /* Ensure the card fills the container width */
+        height: 100%; /* Make the card take up the full height of the container */
+    }
+
+    .container.show {
+        display: block;
+    }
+</style>
+
+<h3 class="text-lg mb-4"><b>DMCR Request</b></h3>
+<div class="container mt-3" id="contentContainer">
+    <div class="d-flex justify-content-left">
+        <div class="col-md-12">
+            <!-- Set column width to match container -->
+            <div class="card mt-3 position-relative" id="dmcrCard">
+                <div class="card-body p-0">
+                    <!-- Ensure iframe fully fits the card -->
+                    <iframe id="releaseRequestIframe" src="@ViewBag.RedirectUrl" width="1400px" height="850px" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Get the iframe element
+        var iframe = document.getElementById("releaseRequestIframe");
+
+        // Ensure the iframe is loaded before accessing its content
+        iframe.onload = function () {
+            // Show the container once the iframe has loaded
+            $('#contentContainer').addClass('show');
+        };
+    });
+</script>

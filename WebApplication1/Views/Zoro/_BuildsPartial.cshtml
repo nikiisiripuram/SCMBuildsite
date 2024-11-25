@@ -1,0 +1,35 @@
+﻿@* @*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+@model List<BuildModel>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Build Old Style</th>
+            <th>Build New Style</th>
+            <th>Label</th>
+            <th>Date Added</th>
+            <th>BG_USER_18</th>
+            <th>Special Instructions</th>
+            <th>Config Changes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var build in Model)
+        {
+            <tr>
+                <td>@build.Id</td>
+                <td>@build.BuildOldStyle</td>
+                <td>@build.BuildNewStyle</td>
+                <td>@build.Label</td>
+                <td>@build.DateAdded</td>
+                <td>@build.BG_USER_18</td>
+                <td>@build.SpecialInstructions</td>
+                <td>@build.ConfigChanges</td>
+            </tr>
+        }
+    </tbody>
+</table>
+ *@

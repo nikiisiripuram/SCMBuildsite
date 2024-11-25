@@ -1,0 +1,270 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Request GitHub Build</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Style for round corners */
+        .container, .card {
+            border-radius: 20px;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: -30px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+      
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            var list1 = document.getElementById('firstList');
+
+            list1.options[0] = new Option('--Select--', '');
+            list1.options[1] = new Option('Companion-Products-Pipeline', 'Companion-Products-Pipeline');
+            list1.options[2] = new Option('Dashboard-Pipeline', 'Dashboard-Pipeline');
+            list1.options[3] = new Option('DIT-Pipeline', 'DIT-Pipeline');
+            list1.options[4] = new Option('DST-Pipeline', 'DST-Pipeline');
+            list1.options[5] = new Option('Enterprise-Pipeline', 'Enterprise-Pipeline');
+            list1.options[6] = new Option('Lead-Manager-Pipeline', 'Lead-Manager-Pipeline');
+            list1.options[7] = new Option('Reporting-Pipeline', 'Reporting-Pipeline');
+            list1.options[8] = new Option('Search-Utilities-Pipeline', 'Search-Utilities-Pipeline');
+            list1.options[9] = new Option('Talent-Gateway-Web-Pipeline', 'Talent-Gateway-Web-Pipeline');
+            list1.options[10] = new Option('Workbench-Pipeline', 'Workbench-Pipeline');
+            var list3 = document.getElementById('thirdList');
+
+            list3.options[0] = new Option('TRUE', 'TRUE');
+            list3.options[1] = new Option('FALSE', 'FALSE');
+
+            var list4 = document.getElementById('fourthList');
+
+            //list4.options[0] = new Option('Release', 'Release');
+            //list4.options[1] = new Option('AppScan', 'Debug');
+        });
+
+        function closeForm() {
+            // Hide the form
+            document.querySelector(".form-group").parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "none";
+
+            // Redirect to the home page
+            window.location.href = '/'; // Adjust this path if your home page is at a different URL
+        }
+
+        function alert() {
+            var email = document.getElementById("email").value;
+            var repository = document.getElementById("firstList").value;
+            var subcomponent = document.getElementById("secondList").value;
+            var branch = document.getElementById("thirdList").value;
+            var configuration = document.getElementById("fourthList").value;
+            if (confirm(configuration)) {
+                window.location.reload();
+            }
+        }
+
+        // janky recursive function that will call itself until the desired field is found!
+        function callBuildQueueUrl(queueUrl) {
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText)
+                    //console.log(obj.executable);
+                    if (typeof obj.executable === "undefined") {
+                        callBuildQueueUrl(queueUrl);
+                    } else if (typeof obj.executable.url === "undefined" || typeof obj.executable.url === "null") {
+                        callBuildQueueUrl(queueUrl);
+                    } else {
+                        var buildUrl = obj.executable.url;
+                        if (confirm("Request Accepted. Here's your build: " + buildUrl)) {
+                            window.location.reload();
+                        }
+                    }
+                }
+            };
+            xmlhttp.open("GET", queueUrl, true);
+            xmlhttp.send();
+        }
+
+        function callJenkins() {
+            var email = document.getElementById("email").value;
+            var Component = document.getElementById("firstList").value;
+
+            var IISReset = document.getElementById("thirdList").value;
+
+            var method = "POST"
+
+            var url = `https://nalb-br-labs-jenkins.vip.corp.brassring.com/job/Brassring%20SCM%20Jobs/job/Deploy%20Config_Dev/buildWithParameters?Component=${Component}&Email=${email}&IISReset=${IISReset}`
+            var user = "releng";
+            //var token = "0828161aa59119e399715bc3a721a0ba" ;
+            var token = "11b54efb438b749308122cf9135ffe07ed";
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.setRequestHeader('Authorization', 'Basic ' + btoa(user + ":" + token));
+
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+                    console.log("call complete");
+                    // Get the raw header string
+                    var queueUrl = xhr.getResponseHeader('Location') + "/api/json";
+
+                    // we now have the location of the build in the queue
+                    // Grab the location of the build
+
+                    var buildUrl = callBuildQueueUrl(queueUrl);
+                }
+            };
+            xhr.send();
+
+        }
+    </script>
+</head>
+
+<body>
+<div class="container" style="width: 80%; height: 80vh; margin-top: -30px;">
+    <div class="row justify-content-center align-items-center" style="height: 80%;">
+        <div class="col-md-8">
+            <div class="card" style="height: 100%;">
+                <div class="card-body">
+                    <h4 class="card-title">Deploy Dev Config</h4>
+                    <p style="font-size: 1.1rem; margin-top: 10px; color: #6c757d;">
+                        (To Deploy the Configurations into servers)
+                    </p>
+                        <div class="form-container" style="position: relative; height: 100%;">
+                            <div class="close-icon" style="cursor: pointer; font-size: 1.5rem; position: absolute; top: -80px; right: 10px;" onclick="closeForm()">✖</div>
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" oninput="validateEmail()" value="@ViewBag.Email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="firstList">Component</label>
+                                <select class="form-control" id="firstList" name="firstList"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="thirdList">IISReset</label>
+                                <select class="form-control" id="thirdList" name="thirdList"></select>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="button" id="Submitbtn" onclick="showConfirmation()" class="btn btn-light" disabled>Submit</button>
+                                <input type="button" value="Reset" class="btn btn-default" onclick="resetForm()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <script>
+          
+            // Validate email format
+            function validateEmail() {
+                const emailInput = document.getElementById('email');
+                const emailValue = emailInput.value.trim();
+
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                const isValidEmail = emailRegex.test(emailValue);
+
+                if (isValidEmail) {
+                    emailInput.classList.remove('is-invalid');
+                    emailInput.classList.add('is-valid');
+                } else {
+                    emailInput.classList.remove('is-valid');
+                    emailInput.classList.add('is-invalid');
+                }
+
+                toggleSubmitButton();
+            }
+
+            // Show confirmation message and submit form
+            function showConfirmation() {
+                // Show the alert popup with Cancel and Continue buttons
+                if (confirm("Are you sure you want to submit?")) {
+                    // If Continue is clicked, call the submit function
+                    callJenkins(); // Call your submit function here
+                } else {
+                    // If Cancel is clicked, do nothing or handle as needed
+                    cancelSubmit(); // Call the cancel function
+                }
+            }
+
+            // Submit the form
+            function submitForm() {
+                // Logic to submit the form
+                alert('Form submitted successfully!');
+                document.getElementById('form').submit(); // Change 'form' to your actual form ID
+            }
+
+            // Cancel form submission
+            function cancelSubmit() {
+                // This function handles the cancel action
+                alert("Submission canceled."); // Display a message or perform other actions
+                // You can add more code here if needed
+            }
+
+            // Reset form fields
+            function resetForm() {
+                document.getElementById('email').value = '';
+                document.getElementById('firstList').selectedIndex = 0;
+                document.getElementById('thirdList').selectedIndex = 0;
+                document.getElementById('Submitbtn').disabled = true;
+
+                const formInputs = document.querySelectorAll('.form-control');
+                formInputs.forEach(input => {
+                    input.classList.remove('is-valid', 'is-invalid');
+                });
+            }
+
+            // Toggle submit button based on form validation
+            function toggleSubmitButton() {
+                const emailInput = document.getElementById('email');
+                const firstList = document.getElementById('firstList');
+                const thirdList = document.getElementById('thirdList');
+                const submitBtn = document.getElementById('Submitbtn');
+
+                const isValidEmail = emailInput.classList.contains('is-valid');
+                const isValidFirstList = firstList.selectedIndex !== 0;
+                const isValidThirdList = thirdList.selectedIndex !== 0;
+
+                if (isValidEmail && isValidFirstList && isValidThirdList) {
+                    submitBtn.disabled = true; // Enable the submit button
+                } else {
+                    submitBtn.disabled = false; // Disable the submit button
+                }
+                $("#Submitbtn").addClass("btn-primary")
+            }
+
+
+            // Add event listeners for input validation
+            document.addEventListener('DOMContentLoaded', function () {
+                const emailInput = document.getElementById('email');
+                const firstList = document.getElementById('firstList');
+                const thirdList = document.getElementById('thirdList');
+                const submitBtn = document.getElementById('Submitbtn');
+
+                emailInput.addEventListener('input', validateEmail);
+                firstList.addEventListener('change', toggleSubmitButton);
+                thirdList.addEventListener('change', toggleSubmitButton);
+                submitBtn.addEventListener('click', showConfirmation);
+            });
+        </script>
+</body>
+</html>

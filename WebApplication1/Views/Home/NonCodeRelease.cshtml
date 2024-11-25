@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "None-Code Release Request";
+}
+<style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .container {
+        padding-top: 40px; /* Adjust this value to control the gap between the navbar and the container */
+        display: none; /* Initially hide the container */
+    }
+
+    .back-button {
+        display: none; /* Hide the back button */
+    }
+
+    .card {
+        background-color: white; /* Optional: Set card background to white for better contrast */
+    }
+
+    /* Add a class to show the container once the iframe is loaded */
+    .container.show {
+        display: block;
+    }
+</style>
+
+<h3 class="text-lg mb-4"><b>DMCR Request</b></h3>
+<div class="container mt-3" id="contentContainer">
+    <div class="d-flex justify-content-left">
+        <div class="col-md-8">
+            <!-- Card without header -->
+            <div class="card mt-3 position-relative" id="dmcrCard" style="height: 500px; width: 1050px;">
+                <div class="card-body p-0">
+                    <iframe id="releaseRequestIframe" src="@ViewBag.RedirectUrl" width="1050px" height="600px" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Get the iframe element
+        var iframe = document.getElementById("releaseRequestIframe");
+
+        // Ensure the iframe is loaded before accessing its content
+        iframe.onload = function () {
+            // Show the container once the iframe has loaded
+            $('#contentContainer').addClass('show');
+        };
+    });
+</script>

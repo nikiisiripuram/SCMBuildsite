@@ -1,0 +1,211 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = WebApplication1
+build_property.RootNamespace = WebApplication1
+build_property.ProjectDir = C:\Users\nikhilsi\Desktop\SCM Build SIte\WebApplication1\WebApplication1\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\nikhilsi\Desktop\SCM Build SIte\WebApplication1\WebApplication1
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Pages/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Auth/DevOpes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxEZXZPcGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Auth/Devopes1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxEZXZvcGVzMS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Auth/DevOpes2.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxEZXZPcGVzMi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Auth/OMGDashBoard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxPTUdEYXNoQm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/BigIpStatus/EUBigIpStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlnSXBTdGF0dXNcRVVCaWdJcFN0YXR1cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/BigIpStatus/QABigIpStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlnSXBTdGF0dXNcUUFCaWdJcFN0YXR1cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/BigIpStatus/StgBigIpStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlnSXBTdGF0dXNcU3RnQmlnSXBTdGF0dXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/BigIpStatus/USBigIpStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlnSXBTdGF0dXNcVVNCaWdJcFN0YXR1cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/CodeRelRequest/Build.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29kZVJlbFJlcXVlc3RcQnVpbGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/CodeRelRequest/CodeRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29kZVJlbFJlcXVlc3RcQ29kZVJlcXVlc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/DMCR/DMCRApproval.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRE1DUlxETUNSQXBwcm92YWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/DMCR/DMCRRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRE1DUlxETUNSUmVxdWVzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/DMCR/DMCRTracker.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRE1DUlxETUNSVHJhY2tlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/DMCR/ObjectConflict.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRE1DUlxPYmplY3RDb25mbGljdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/DeployDevBuild.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXBsb3lEZXZCdWlsZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/DeployDevConfig.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXBsb3lEZXZDb25maWcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/Github.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHaXRodWIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/NonCodeRelease.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOb25Db2RlUmVsZWFzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/OMGDashBoard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxPTUdEYXNoQm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Home/Unauthorized.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVbmF1dGhvcml6ZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Luffy/Server.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTHVmZnlcU2VydmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/New/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/New/NonCodeRel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3XE5vbkNvZGVSZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/NonCodeRelease/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm9uQ29kZVJlbGVhc2VcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/ReleaseRequest/CodeRel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVsZWFzZVJlcXVlc3RcQ29kZVJlbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/ReleaseRequest/ReleaseRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVsZWFzZVJlcXVlc3RcUmVsZWFzZVJlcXVlc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Sanji/ModifyRelease.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuamlcTW9kaWZ5UmVsZWFzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Script/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NyaXB0XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Script/_ScriptDetailPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NyaXB0XF9TY3JpcHREZXRhaWxQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Shared/_Layout1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQxLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/SmokeTest/EUprod.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU21va2VUZXN0XEVVcHJvZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/SmokeTest/Onestg.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU21va2VUZXN0XE9uZXN0Zy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/SmokeTest/QA.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU21va2VUZXN0XFFBLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/SmokeTest/USprod.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU21va2VUZXN0XFVTcHJvZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Zoro/Builds.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWm9yb1xCdWlsZHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Zoro/_BuildsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWm9yb1xfQnVpbGRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nikhilsi/Desktop/SCM Build SIte/WebApplication1/WebApplication1/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-bddmc6yalx

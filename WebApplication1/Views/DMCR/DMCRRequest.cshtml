@@ -1,0 +1,198 @@
+﻿@* @{
+    ViewData["Title"] = "DMCR Request";
+}
+<link rel="stylesheet" href="~/css/site.css" />
+<style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Add margin to create space between the top and the card */
+    .container {
+        padding-top: 30px; /* Adjust this value to control the gap between the navbar and the container */
+    }
+
+    /* Styles for the card header */
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 10px 20px;
+        font-size: 1.25rem;
+        font-weight: 500;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Back button styles */
+    .back-button {
+        text-decoration: none;
+        padding: 5px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 1rem;
+        display: inline-block;
+    }
+
+        .back-button:hover {
+            background-color: transparent;
+        }
+
+    /* Close button positioning */
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    /* Hide the card initially */
+    #dmcrCard {
+        display: none; /* Card will be hidden by default */
+    }
+</style>
+
+<h3 class="text-lg mb-4"><b>DMCR Request</b></h3>
+<div class="container mt-3">
+    <div class="d-flex justify-content-left">
+        <div class="col-md-8">
+            <!-- Card with header for DMCR Tracker -->
+            <div class="card mt-3 position-relative" id="dmcrCard" style="height: 750px; width: 1150px;">
+                <!-- Card header with back button -->
+                <div class="card-header">
+                    <span>DMCR Request</span>
+                    <a href="@Url.Action("Index", "Home")" class="back-button">Back</a>
+                </div>
+                
+                <!-- Adjust the height to match the iframe -->
+                <div class="card-body p-0">
+                    <!-- Remove padding to fit the iframe exactly -->
+                    <iframe src="@ViewBag.RedirectUrl" width="1150px" height="700px" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeCard() {
+        const cardElement = document.getElementById('dmcrCard');
+        if (cardElement) {
+            cardElement.style.display = 'none';
+        }
+    }
+
+    function authenticateCard() {
+        // Replace this with actual authentication logic
+        const isAuthenticated = true; // Example: replace this with real authentication check
+
+        if (isAuthenticated) {
+            document.getElementById('dmcrCard').style.display = 'block';
+        } else {
+            // Optionally, display a message or redirect to a login page
+            alert('Authentication failed. Redirecting to login...');
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    }
+
+    // Call the authentication function when the page loads
+    window.onload = authenticateCard;
+</script>
+ *@
+
+@{
+    ViewData["Title"] = "DMCR Request";
+}
+
+<!-- Add Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+
+<!-- Custom Styles -->
+<style>
+   
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Full-screen container */
+    .full-screen-container {
+        width: 100vw;
+        height: 100vh;
+        display: none; /* Hide by default */
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: transparent;
+    }
+
+    /* Container for iframe and back button */
+    .iframe-container {
+        position: relative;
+        width: 80vw;
+        height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+    }
+
+    /* Full-screen iframe */
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 10px;
+    }
+</style>
+
+<!-- Full-screen container -->
+<div class="full-screen-container" id="dmcrFullScreenContainer">
+    <div class="iframe-container">
+        <!-- Back Button -->
+        <iframe src="@ViewBag.RedirectUrl" allowfullscreen></iframe>
+    </div>
+
+
+</div>
+
+<!-- Add Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function closeCard() {
+        const containerElement = document.getElementById('dmcrFullScreenContainer');
+        if (containerElement) {
+            containerElement.style.display = 'none';
+        }
+    }
+
+    function authenticateCard() {
+        // Replace this with actual authentication logic
+        const isAuthenticated = true; // Example: replace this with real authentication check
+
+        if (isAuthenticated) {
+            document.getElementById('dmcrFullScreenContainer').style.display = 'flex';
+        } else {
+            // Optionally, display a message or redirect to a login page
+            alert('Authentication failed. Redirecting to login...');
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    }
+
+    // Call the authentication function when the page loads
+    window.onload = authenticateCard;
+</script>

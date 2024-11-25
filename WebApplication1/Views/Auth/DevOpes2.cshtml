@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/views/shared/_layout1.cshtml";
+    ViewData["Title"] = "DevOpes Page";
+}
+<style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .welcome {
+        position: fixed; /* Keeps the text fixed in the viewport */
+        top: 120px; /* Adjust the top spacing as necessary */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Center horizontally */
+        text-align: center;
+        z-index: 1000; /* Ensure it stays above other elements */
+    }
+
+</style>
+<section class="home" id="dashboard-container">
+    <div class="container welcome">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h4>Welcome To  DevOpes Arena</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text" id="sidebarSection"></div>
+</section>
