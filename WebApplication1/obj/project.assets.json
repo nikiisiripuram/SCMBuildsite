@@ -12866,8 +12866,8 @@
     },
     "AzureClientLibrary/1.0.0": {
       "type": "project",
-      "path": "../../../DevOpsWebApps/AzureClientLibrary/AzureClientLibrary.csproj",
-      "msbuildProject": "../../../DevOpsWebApps/AzureClientLibrary/AzureClientLibrary.csproj"
+      "path": "../../../../Desktop/DevOpsWebApps/AzureClientLibrary/AzureClientLibrary.csproj",
+      "msbuildProject": "../../../../Desktop/DevOpsWebApps/AzureClientLibrary/AzureClientLibrary.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -12897,11 +12897,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nikhilsi\\Desktop\\Scm Build SIte\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "C:\\Users\\nikhilsi\\Source\\Repos\\SCMBuildsite\\WebApplication1\\WebApplication1.csproj",
       "projectName": "WebApplication1",
-      "projectPath": "C:\\Users\\nikhilsi\\Desktop\\Scm Build SIte\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectPath": "C:\\Users\\nikhilsi\\Source\\Repos\\SCMBuildsite\\WebApplication1\\WebApplication1.csproj",
       "packagesPath": "C:\\Users\\nikhilsi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nikhilsi\\Desktop\\Scm Build SIte\\WebApplication1\\WebApplication1\\obj\\",
+      "outputPath": "C:\\Users\\nikhilsi\\Source\\Repos\\SCMBuildsite\\WebApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nikhilsi\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -13026,7 +13026,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
